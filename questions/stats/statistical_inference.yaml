@@ -156,9 +156,10 @@
     mean $\mu$ and finite variance $\sigma^2$. Then
     $\sqrt{n}(\bar X_n - \mu) \to \mathcal{N}(0, \sigma^2)$ in distribution.
 
-    The Cauchy distribution has undefined mean and infinite variance - the
-    defining integral does not converge absolutely - so the CLT does not
-    apply. The sample mean of n i.i.d. Cauchy variables is itself Cauchy with
+    The Cauchy distribution has an undefined mean - the defining integral
+    does not converge absolutely - and consequently an undefined variance
+    rather than merely a large one ($E[X^2]$ diverges, and $Var$ is defined
+    about a mean that does not exist). So the CLT does not apply. The sample mean of n i.i.d. Cauchy variables is itself Cauchy with
     the *same* scale parameter: averaging does not concentrate at all.
     Increasing n gives you no improvement whatsoever, which is the sharpest
     possible illustration that the finite-variance condition is doing real
@@ -169,7 +170,8 @@
     Gaussian is the special case $\alpha = 2$; Cauchy is $\alpha = 1$.
   rubric:
     - States i.i.d. with finite mean and finite variance as the conditions
-    - States Cauchy has undefined mean and infinite variance so the CLT does not apply
+    - States the Cauchy mean is undefined (integral not absolutely convergent)
+    - States the variance is undefined rather than merely large, so the finite-variance condition fails
     - States the sample mean of Cauchy samples is Cauchy with the same scale - no concentration with n
     - Names the Generalised CLT / stable distributions, ideally with Gaussian as alpha=2
   provenance:

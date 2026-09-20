@@ -279,3 +279,74 @@ def test_verified_question_may_use_the_cheap_tier():
     g = GeminiGrader(model="gemini-3.5-flash-lite", client=fake, fallbacks=[])
     assert g.grade(_verified_q(), "a").verdict == "incorrect"
     assert fake.tried == ["gemini-3.5-flash-lite"]
+
+
+# ------------------------------------------------------------- verification
+
+VERIFY_YAML = '''# a comment that must survive
+- id: alpha
+  topic: t
+  prompt: |
+    multi
+    line
+  answer: |
+    a
+  rubric:
+    - r1
+  provenance:
+    status: unverified
+    source: "Murphy SS6.2"
+  tags: [x]
+
+- id: beta
+  topic: t
+  prompt: |
+    p
+  answer: |
+    a
+  rubric:
+    - r1
+  provenance:
+    status: unverified
+    source: "Cover SS2.3"
+'''
+
+
+def test_set_status_promotes_only_the_named_question(tmp_path):
+    from recall.verify import set_status
+    from recall.schema import TrustStatus
+    import datetime, yaml as y
+
+    f = tmp_path / "q.yaml"; f.write_text(VERIFY_YAML)
+    set_status(f, "alpha", TrustStatus.VERIFIED, checked=datetime.date(2026, 9, 20))
+    out = f.read_text()
+
+    assert "# a comment that must survive" in out      # formatting preserved
+    assert "multi\n    line" in out                     # block scalars intact
+    data = {d["id"]: d for d in y.safe_load(out)}
+    assert data["alpha"]["provenance"]["status"] == "verified"
+    assert str(data["alpha"]["provenance"]["checked"]) == "2026-09-20"
+    assert data["beta"]["provenance"]["status"] == "unverified"   # untouched
+    assert "checked" not in data["beta"]["provenance"]
+
+
+def test_set_status_round_trips_through_the_loader(tmp_path):
+    from recall.verify import set_status
+    from recall.schema import TrustStatus
+    from recall.store import QuestionBank
+
+    f = tmp_path / "q.yaml"; f.write_text(VERIFY_YAML)
+    set_status(f, "beta", TrustStatus.DISPUTED)
+    bank = QuestionBank(tmp_path)
+    assert bank.questions["beta"].provenance.status is TrustStatus.DISPUTED
+    assert not bank.questions["beta"].servable
+    assert bank.questions["alpha"].servable
+
+
+def test_set_status_rejects_unknown_id(tmp_path):
+    from recall.verify import QuestionNotFound, set_status
+    from recall.schema import TrustStatus
+
+    f = tmp_path / "q.yaml"; f.write_text(VERIFY_YAML)
+    with pytest.raises(QuestionNotFound):
+        set_status(f, "gamma", TrustStatus.VERIFIED)

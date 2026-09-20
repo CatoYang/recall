@@ -44,6 +44,49 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_verify(args: argparse.Namespace) -> int:
+    """Walk unverified questions so a human can promote them."""
+    from .verify import find_file, pending, render, set_status
+    from .schema import TrustStatus
+
+    bank = QuestionBank(args.questions)
+    todo = pending(bank, args.topic)
+    if args.id:
+        todo = [q for q in todo if q.id in args.id]
+    if not todo:
+        print("nothing pending verification")
+        return 0
+
+    print(f"{len(todo)} question(s) pending. For each: read the cited source, "
+          f"then answer.\n")
+    promoted = 0
+    for q in todo:
+        print(render(q))
+        print()
+        try:
+            reply = input("  [y] verified  [n] skip  [d] dispute  [q] quit > ").strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nstopped")
+            break
+        if reply == "q":
+            break
+        if reply == "y":
+            set_status(find_file(args.questions, q.id), q.id, TrustStatus.VERIFIED)
+            promoted += 1
+            print("  -> verified\n")
+        elif reply == "d":
+            set_status(find_file(args.questions, q.id), q.id, TrustStatus.DISPUTED)
+            print("  -> disputed (will not be served)\n")
+        else:
+            print("  -> left unverified\n")
+
+    bank = QuestionBank(args.questions)
+    print(bank_summary(bank))
+    if promoted:
+        print(f"{promoted} promoted - these can now be graded by the cheap tier.")
+    return 0
+
+
 def cmd_eval(args: argparse.Namespace) -> int:
     """Measure candidate grader models against planted-error fixtures."""
     from .evaluate import load_fixtures, report, run
@@ -124,6 +167,11 @@ def main(argv: list[str] | None = None) -> int:
     p_models = sub.add_parser("models", help="verify credentials, list reachable models")
     p_models.add_argument("--backend", choices=["anthropic", "gemini"], default=None)
     p_models.set_defaults(func=cmd_models)
+
+    p_verify = sub.add_parser("verify", help="check questions against their sources")
+    p_verify.add_argument("--topic", default=None)
+    p_verify.add_argument("--id", nargs="*", default=None)
+    p_verify.set_defaults(func=cmd_verify)
 
     p_eval = sub.add_parser("eval", help="measure grader models on planted errors")
     p_eval.add_argument("models", nargs="+", help="model ids to compare")
