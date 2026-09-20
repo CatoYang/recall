@@ -108,6 +108,7 @@ class AnthropicGrader:
         import anthropic
 
         self.model = model or ANTHROPIC_MODEL
+        self.used_model = self.model
         if client is None:
             key = get_key("ANTHROPIC_API_KEY")
             if not key:
@@ -129,13 +130,32 @@ class AnthropicGrader:
         return response.parsed_output
 
 
+#: Tried in order when the primary model returns 503/429. Free-tier Flash and
+#: Pro are frequently congested or quota-capped; flash-lite is the reliable
+#: floor. Ordered most to least capable.
+GEMINI_FALLBACKS = [
+    "gemini-3.8-flash",
+    "gemini-3.5-flash",
+    "gemini-3.5-flash-lite",
+    "gemini-3.1-flash-lite",
+]
+
+_TRANSIENT = ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "overloaded")
+
+
+def _is_transient(exc: Exception) -> bool:
+    return any(t in str(exc) for t in _TRANSIENT)
+
+
 class GeminiGrader:
     name = "gemini"
 
-    def __init__(self, model: str | None = None, client=None):
+    def __init__(self, model: str | None = None, client=None, fallbacks=None):
         from google import genai
 
         self.model = model or GEMINI_MODEL
+        self.used_model = self.model
+        self.fallbacks = [m for m in (fallbacks or GEMINI_FALLBACKS) if m != self.model]
         if client is None:
             key = get_key("GEMINI_API_KEY") or get_key("GOOGLE_API_KEY")
             if not key:
@@ -146,22 +166,55 @@ class GeminiGrader:
             client = genai.Client(api_key=key)
         self.client = client
 
-    def grade(self, question: Question, answer: str) -> Grade:
+    def _call(self, model: str, prompt: str) -> Grade:
         from google.genai import types
 
         response = self.client.models.generate_content(
-            model=self.model,
-            contents=build_prompt(question, answer),
+            model=model,
+            contents=prompt,
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM,
                 response_mime_type="application/json",
                 response_schema=Grade,
+                # we never want tool calls here; also silences the AFC warning
+                automatic_function_calling=types.AutomaticFunctionCallingConfig(
+                    disable=True
+                ),
             ),
         )
         parsed = response.parsed
         # The SDK returns the pydantic instance when response_schema is a model,
         # but falls back to a dict on some paths - normalise either way.
         return parsed if isinstance(parsed, Grade) else Grade.model_validate(parsed)
+
+    def grade(self, question: Question, answer: str) -> Grade:
+        """Grade, degrading to a less contended model rather than failing.
+
+        Free-tier Flash and Pro return 503/429 often enough that a single
+        attempt would interrupt a review session regularly. `used_model`
+        records what actually answered, so a grade is never silently
+        attributed to a model that did not produce it.
+        """
+        import time
+
+        prompt = build_prompt(question, answer)
+        last: Exception | None = None
+        for model in [self.model, *self.fallbacks]:
+            for attempt in range(2):
+                try:
+                    grade = self._call(model, prompt)
+                    self.used_model = model
+                    return grade
+                except Exception as exc:
+                    last = exc
+                    if not _is_transient(exc):
+                        raise
+                    if attempt == 0:
+                        time.sleep(1.5)
+        raise RuntimeError(
+            f"every Gemini model was unavailable (last: {last}). "
+            "Free-tier Flash/Pro are often congested - try again shortly."
+        ) from last
 
 
 BACKENDS = {"anthropic": AnthropicGrader, "gemini": GeminiGrader}

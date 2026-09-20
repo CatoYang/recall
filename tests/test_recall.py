@@ -173,9 +173,67 @@ def test_missing_credential_is_actionable(monkeypatch):
 
 
 def test_both_backends_share_one_prompt():
-    """Backends must not drift apart - the prompt is the graded contract."""
-    from recall.grader import AnthropicGrader, GeminiGrader, build_prompt
+    """Backends must not drift apart - the prompt is the graded contract.
+
+    Checks the whole class, not one method: where in the class the prompt is
+    assembled is an implementation detail, that it is the shared one is not.
+    """
+    from recall.grader import AnthropicGrader, GeminiGrader
     import inspect
     for cls in (AnthropicGrader, GeminiGrader):
-        assert "build_prompt" in inspect.getsource(cls.grade)
-        assert "SYSTEM" in inspect.getsource(cls.grade)
+        src = inspect.getsource(cls)
+        assert "build_prompt(" in src, f"{cls.__name__} builds its own prompt"
+        assert "SYSTEM" in src, f"{cls.__name__} uses its own system prompt"
+
+
+# ---------------------------------------------------------- gemini fallback
+
+class _FakeGemini:
+    """Fails the first N models with a 503, then succeeds."""
+
+    def __init__(self, fail_models):
+        self.fail_models = set(fail_models)
+        self.tried = []
+        self.models = self
+
+    def generate_content(self, *, model, contents, config):
+        self.tried.append(model)
+        if model in self.fail_models:
+            raise RuntimeError("503 UNAVAILABLE. model is overloaded")
+        return type("R", (), {"parsed": make_grade("incorrect", (False, False))})()
+
+
+def test_gemini_falls_back_past_congested_models():
+    from recall.grader import GeminiGrader
+
+    fake = _FakeGemini({"gemini-3.8-flash", "gemini-3.5-flash"})
+    g = GeminiGrader(model="gemini-3.8-flash", client=fake,
+                     fallbacks=["gemini-3.5-flash", "gemini-3.5-flash-lite"])
+    grade = g.grade(make_question(), "an answer")
+    assert grade.verdict == "incorrect"
+    assert g.used_model == "gemini-3.5-flash-lite"   # what actually answered
+    assert fake.tried.count("gemini-3.8-flash") == 2  # retried once before moving on
+
+
+def test_gemini_does_not_retry_non_transient_errors():
+    """A bad key or malformed request must fail fast, not burn the chain."""
+    from recall.grader import GeminiGrader
+
+    class Boom:
+        models = None
+        def generate_content(self, **kw):
+            raise RuntimeError("400 INVALID_ARGUMENT: bad schema")
+    boom = Boom(); boom.models = boom
+
+    g = GeminiGrader(model="m1", client=boom, fallbacks=["m2"])
+    with pytest.raises(RuntimeError, match="INVALID_ARGUMENT"):
+        g.grade(make_question(), "a")
+
+
+def test_all_models_exhausted_gives_actionable_error():
+    from recall.grader import GeminiGrader
+
+    fake = _FakeGemini({"m1", "m2"})
+    g = GeminiGrader(model="m1", client=fake, fallbacks=["m2"])
+    with pytest.raises(RuntimeError, match="congested"):
+        g.grade(make_question(), "a")
