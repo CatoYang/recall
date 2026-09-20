@@ -1,0 +1,33 @@
+
+
+
+
+#body {
+    height: 1fr;
+}
+
+#left {
+    width: 1fr;
+    padding: 1 2;
+    border-right: solid $panel;
+}
+
+#right {
+    width: 1fr;
+    padding: 1 2;
+}
+
+#meta {
+    color: $text-muted;
+    margin-bottom: 1;
+}
+
+#answer {
+    height: 1fr;
+    min-height: 12;
+    border: round $panel;
+}
+
+#feedback {
+    height: auto;
+}

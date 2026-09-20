@@ -1,0 +1,147 @@
+# Information theory foundations.
+#
+# status: unverified on every entry - these were LLM-generated. `source` names
+# where to check them, not that anyone has. Flip to `verified` + set `checked`
+# only after you have read the cited passage yourself.
+
+- id: kl-direction-zero-forcing
+  topic: information-theory
+  difficulty: 4
+  prompt: |
+    Which direction of the KL divergence is "zero-forcing" and which is
+    "mass-covering"? Explain the asymmetry mechanically, and say which one
+    variational inference minimises and why that matters for a multimodal
+    posterior.
+  answer: |
+    Reverse KL, $D(Q\|P)$, is zero-forcing (also called mode-seeking).
+    Forward KL, $D(P\|Q)$, is mass-covering (zero-avoiding, mean-seeking).
+
+    The asymmetry follows from which distribution the expectation is taken
+    under. $D(P\|Q) = \mathbb{E}_{x\sim P}[\log P/Q]$ integrates over the
+    support of P, so any region where $P(x) > 0$ but $Q(x) \to 0$ contributes
+    an unbounded penalty. Q is therefore forced to put mass everywhere P does
+    - it avoids zeros, and smears across all modes.
+
+    $D(Q\|P) = \mathbb{E}_{x\sim Q}[\log Q/P]$ integrates over the support of
+    Q, so the penalty is unbounded only where $Q(x) > 0$ and $P(x) \to 0$.
+    Q is pushed to be zero wherever P is - it is forced to zero outside P's
+    support, and can safely ignore modes of P entirely by placing no mass
+    there.
+
+    Variational inference minimises the reverse KL, because it is the
+    direction that is tractable (the ELBO). The consequence is that a
+    unimodal variational family fitted to a multimodal posterior will lock
+    onto a single mode and underestimate posterior variance, rather than
+    averaging across modes.
+  rubric:
+    - States reverse KL D(Q||P) is zero-forcing/mode-seeking and forward KL D(P||Q) is mass-covering/zero-avoiding
+    - Derives the asymmetry from which distribution the expectation is taken under
+    - Identifies the unbounded-penalty region for each direction (P>0 with Q to 0 vs Q>0 with P to 0)
+    - States that variational inference minimises reverse KL
+    - Names the consequence for a multimodal posterior - single mode captured, variance underestimated
+  provenance:
+    status: unverified
+    source: "Murphy, Probabilistic Machine Learning: An Introduction, ch. 6 (KL divergence); Bishop PRML SS10.1"
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
+  tags: [kl-divergence, variational-inference, asymmetry]
+
+- id: cross-entropy-kl-decomposition
+  topic: information-theory
+  difficulty: 3
+  prompt: |
+    Write the relationship between cross-entropy $H(P,Q)$, entropy $H(P)$ and
+    $D_{KL}(P\|Q)$. Given that relationship, explain precisely why minimising
+    cross-entropy during training is equivalent to minimising KL divergence -
+    and state the condition that makes it so.
+  answer: |
+    $H(P,Q) = H(P) + D_{KL}(P\|Q)$.
+
+    When training, P is the empirical data distribution and is fixed with
+    respect to the parameters $\theta$; only $Q_\theta$ varies. $H(P)$ is
+    therefore a constant offset, so
+    $\arg\min_\theta H(P,Q_\theta) = \arg\min_\theta D_{KL}(P\|Q_\theta)$.
+
+    The condition is exactly that P does not depend on $\theta$. The two
+    objectives differ by a constant, so they share a minimiser - but they do
+    not have the same value. Cross-entropy is floored at $H(P)$, not at zero;
+    a "loss" that plateaus above zero on noisy labels is the irreducible
+    entropy of P, not a bug.
+  rubric:
+    - States H(P,Q) = H(P) + D_KL(P||Q)
+    - Identifies that P is fixed with respect to the parameters during training
+    - Concludes the two objectives differ by a constant and so share a minimiser
+    - Notes the values differ - cross-entropy is floored at H(P), not zero
+  provenance:
+    status: unverified
+    source: "Cover & Thomas, Elements of Information Theory, ch. 2; Goodfellow et al., Deep Learning, SS3.13"
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
+  tags: [cross-entropy, kl-divergence, loss-functions]
+
+- id: differential-entropy-negative
+  topic: information-theory
+  difficulty: 4
+  prompt: |
+    Shannon entropy of a discrete variable is non-negative, but differential
+    entropy of a continuous variable can be negative. Give a concrete example,
+    explain why the non-negativity argument breaks, and state one further
+    property that discrete entropy has and differential entropy lacks.
+  answer: |
+    Example: a uniform distribution on $[0, a]$ has density $1/a$ and
+    differential entropy $h = \log a$, which is negative for $a < 1$. A
+    Gaussian with small enough $\sigma$ likewise has negative $h$.
+
+    The non-negativity argument breaks because discrete entropy sums
+    $-P(x)\log P(x)$ over probabilities bounded by 1, so every term is
+    non-negative. Differential entropy integrates $-p(x)\log p(x)$ over a
+    *density*, which is not bounded by 1 - concentrating a density above 1
+    makes $\log p(x) > 0$ and the integrand negative.
+
+    Further property: differential entropy is not invariant under a change of
+    variables. Under an invertible map, $h$ shifts by the expected log
+    Jacobian determinant - so unlike discrete entropy it is not an intrinsic
+    measure of information content, merely a relative one. (It is also not an
+    upper bound on anything like code length.)
+  rubric:
+    - Gives a concrete negative-entropy example, e.g. uniform on [0,a] with a<1 giving log a
+    - Explains that densities are not bounded by 1, unlike probabilities
+    - Concludes the integrand can be negative where p(x) > 1
+    - States that differential entropy is not invariant to change of variables (shifts by the log Jacobian)
+  provenance:
+    status: unverified
+    source: "Cover & Thomas, Elements of Information Theory, ch. 8 (Differential Entropy)"
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
+  tags: [differential-entropy, continuous-distributions]
+
+- id: mutual-information-information-gain
+  topic: information-theory
+  difficulty: 3
+  prompt: |
+    Decision-tree "information gain" and "mutual information" are often said
+    to be the same thing. State the identity precisely, and explain what
+    mutual information measures that a raw entropy drop does not - including
+    why $I(X;Y) = 0$ has a specific meaning.
+  answer: |
+    $IG(Y, X) = H(Y) - H(Y \mid X) = I(X; Y)$. They are the same quantity;
+    "information gain" is the decision-tree name for the mutual information
+    between the split feature and the target.
+
+    Mutual information measures the reduction in uncertainty about Y from
+    observing X - equivalently $D_{KL}(P(X,Y) \| P(X)P(Y))$, the divergence
+    between the joint and the product of marginals. That second form is what
+    a raw entropy drop does not express: MI is a measure of *dependence*, not
+    just of how much a particular partition happened to reduce entropy.
+
+    $I(X;Y) = 0$ if and only if X and Y are statistically independent. Note
+    this is stronger than zero correlation - MI captures non-linear
+    dependence, so a variable with zero Pearson correlation to the target can
+    still have positive mutual information.
+  rubric:
+    - States IG(Y,X) = H(Y) - H(Y|X) = I(X;Y)
+    - Gives the KL form, D(P(X,Y) || P(X)P(Y)), or describes MI as joint-vs-marginal divergence
+    - States I(X;Y)=0 if and only if X and Y are independent
+    - Distinguishes independence from zero correlation - MI captures non-linear dependence
+  provenance:
+    status: unverified
+    source: "Cover & Thomas, Elements of Information Theory, SS2.3; Hastie et al., ESL SS9.2 for the tree framing"
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
+  tags: [mutual-information, decision-trees, independence]

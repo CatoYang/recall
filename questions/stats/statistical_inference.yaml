@@ -1,0 +1,252 @@
+# Statistical inference and learning theory foundations.
+# All entries unverified - see the header note in information_theory.yaml.
+
+- id: bias-variance-cross-term
+  topic: learning-theory
+  difficulty: 4
+  prompt: |
+    The expected squared error decomposes into squared bias, variance and
+    irreducible error. Derive why there is no cross-term, and state exactly
+    which expectation each of the three components is taken over.
+  answer: |
+    Write $\hat{f} = \hat{f}_{\mathcal{D}}(x)$ and $\bar{f} = \mathbb{E}_{\mathcal{D}}[\hat f]$.
+    Decompose $\hat f - f = (\hat f - \bar f) + (\bar f - f)$ and square:
+    the cross-term is $2(\bar f - f)\,\mathbb{E}_{\mathcal{D}}[\hat f - \bar f]$,
+    and $\mathbb{E}_{\mathcal{D}}[\hat f - \bar f] = 0$ by definition of
+    $\bar f$. So it vanishes. The noise term drops out separately because
+    $\epsilon$ has zero mean and is independent of $\mathcal{D}$.
+
+    The expectations differ:
+    - Bias$^2 = (\bar f - f(x))^2$ - taken over training sets $\mathcal{D}$;
+      it is a deterministic quantity once you fix x.
+    - Variance $= \mathbb{E}_{\mathcal{D}}[(\hat f - \bar f)^2]$ - also over
+      training sets. This is the sampling variance of the *estimator*.
+    - Irreducible error $= \sigma^2 = \mathrm{Var}(\epsilon)$ - over the noise
+      in the observation, not over $\mathcal{D}$ at all.
+
+    Conflating the second and third is the common error: "variance" here is
+    the variance of the fitted function across resampled training sets, not
+    the variance of the noise.
+  rubric:
+    - Splits the error as (f-hat minus f-bar) + (f-bar minus f) and squares
+    - Shows the cross-term vanishes because E[f-hat - f-bar] = 0 by definition of f-bar
+    - States bias and variance are expectations over training sets D
+    - States irreducible error is the variance of the noise term, not over D
+    - Explicitly distinguishes estimator variance from noise variance
+  provenance:
+    status: unverified
+    source: "Hastie, Tibshirani & Friedman, ESL SS7.3"
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [bias-variance, decomposition, estimator-variance]
+
+- id: irreducible-vs-bayes-error
+  topic: learning-theory
+  difficulty: 4
+  prompt: |
+    Are "irreducible error" and "Bayes error rate" the same thing? Define
+    each precisely and say in what sense they are analogous and in what sense
+    it is wrong to equate them.
+  answer: |
+    They are analogous but not the same, and the terms belong to different
+    settings.
+
+    Irreducible error is the regression quantity $\sigma^2 = \mathrm{Var}(\epsilon)$
+    in $y = f(x) + \epsilon$: the variance of the noise, in squared-error
+    units, that no regression function can remove.
+
+    Bayes error rate is the classification quantity: the misclassification
+    *probability* of the Bayes-optimal classifier, $1 - \mathbb{E}_x[\max_k P(Y=k \mid x)]$.
+    It is a rate in $[0,1]$, not a variance.
+
+    The analogy is structural - both are the performance floor imposed by the
+    data-generating process rather than the model, so both bound what any
+    learner can achieve. Equating them is wrong because they have different
+    units, different loss functions, and different definitions: one is a
+    second moment of a noise term, the other a probability under 0-1 loss.
+  rubric:
+    - Defines irreducible error as Var(epsilon), the noise variance in a regression setting
+    - Defines Bayes error rate as the error probability of the Bayes-optimal classifier under 0-1 loss
+    - States the structural analogy - both are floors set by the data, not the model
+    - States why equating them is wrong - different units/loss (variance vs probability)
+  provenance:
+    status: unverified
+    source: "Hastie et al., ESL SS2.4 and SS7.3; Murphy PML SS5.1 for Bayes error"
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [bayes-error, irreducible-error, terminology]
+
+- id: confidence-interval-interpretation
+  topic: inference
+  difficulty: 3
+  prompt: |
+    A 95% confidence interval is computed as [2.1, 4.7]. State what the 95%
+    refers to, state the interpretation that is wrong and why, and say what
+    would have to change for "there is a 95% probability the parameter lies
+    in [2.1, 4.7]" to be a correct statement.
+  answer: |
+    The 95% is a property of the *procedure*, not of this interval: if the
+    experiment were repeated many times and an interval constructed the same
+    way each time, 95% of those intervals would contain the true parameter.
+
+    The wrong interpretation is "there is a 95% probability the parameter is
+    in [2.1, 4.7]". Under the frequentist framing the parameter is a fixed
+    unknown constant and the interval is the random object. Once computed,
+    the interval either contains it or does not - the probability is 0 or 1,
+    we just do not know which. There is no distribution over the parameter
+    for the statement to refer to.
+
+    That statement becomes correct under a Bayesian framing, where the
+    parameter *is* treated as a random variable with a posterior. The
+    Bayesian analogue is a 95% credible interval, which does support the
+    direct probability claim - conditional on the prior and model.
+  rubric:
+    - States the 95% is a property of the procedure over repeated sampling
+    - Identifies the wrong interpretation as a direct probability claim about the parameter
+    - Explains that the parameter is fixed and the interval is random, so post hoc the probability is 0 or 1
+    - Names the Bayesian credible interval as the construct that does license the probability statement
+  provenance:
+    status: unverified
+    source: "Wasserman, All of Statistics, SS6.3.2; Gelman et al., BDA3 ch. 4 for the credible-interval contrast"
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [confidence-interval, frequentist, bayesian]
+
+- id: p-value-precise-definition
+  topic: inference
+  difficulty: 3
+  prompt: |
+    Give the precise definition of a p-value. Then explain why "the p-value
+    is the probability the null hypothesis is true" is wrong, and why a
+    p-value of 0.04 does not mean there is a 4% chance the result is a fluke.
+  answer: |
+    A p-value is the probability, *computed under the assumption that the
+    null hypothesis is true*, of observing a test statistic at least as
+    extreme as the one observed. Formally $p = P(T \geq t_{obs} \mid H_0)$.
+
+    It is not $P(H_0 \mid \text{data})$. It conditions the other way round.
+    Getting from one to the other requires Bayes' theorem and a prior on
+    $H_0$, which the p-value does not use and does not supply. The two
+    quantities can differ by orders of magnitude, especially when the prior
+    probability of the alternative is low.
+
+    So $p = 0.04$ does not mean a 4% chance of a fluke. It means: if the null
+    were true, data this extreme or more would arise 4% of the time. The
+    false-discovery rate among significant findings depends additionally on
+    the prior probability that the effect is real and on the power of the
+    test - with low prior odds and low power, a large fraction of p < 0.05
+    results are false positives.
+  rubric:
+    - Gives P(T at least as extreme as observed | H0), conditioning on the null being true
+    - States it is not P(H0 | data) and identifies the conditioning as reversed
+    - Notes that inverting requires a prior via Bayes' theorem
+    - Explains the false-discovery rate also depends on prior odds and power
+  provenance:
+    status: unverified
+    source: "Wasserman, All of Statistics, SS10.2; Ioannidis (2005) 'Why Most Published Research Findings Are False' for the FDR argument"
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [p-value, hypothesis-testing, conditioning]
+
+- id: clt-failure-cauchy
+  topic: inference
+  difficulty: 4
+  prompt: |
+    State the conditions under which the classical CLT applies. Then explain
+    what happens when you average i.i.d. Cauchy samples and why, and name the
+    generalisation that covers such cases.
+  answer: |
+    The classical (Lindeberg-Levy) CLT requires i.i.d. samples with finite
+    mean $\mu$ and finite variance $\sigma^2$. Then
+    $\sqrt{n}(\bar X_n - \mu) \to \mathcal{N}(0, \sigma^2)$ in distribution.
+
+    The Cauchy distribution has undefined mean and infinite variance - the
+    defining integral does not converge absolutely - so the CLT does not
+    apply. The sample mean of n i.i.d. Cauchy variables is itself Cauchy with
+    the *same* scale parameter: averaging does not concentrate at all.
+    Increasing n gives you no improvement whatsoever, which is the sharpest
+    possible illustration that the finite-variance condition is doing real
+    work rather than being a technicality.
+
+    The generalisation is the Generalised CLT: sums of i.i.d. heavy-tailed
+    variables converge to a stable (Levy alpha-stable) distribution. The
+    Gaussian is the special case $\alpha = 2$; Cauchy is $\alpha = 1$.
+  rubric:
+    - States i.i.d. with finite mean and finite variance as the conditions
+    - States Cauchy has undefined mean and infinite variance so the CLT does not apply
+    - States the sample mean of Cauchy samples is Cauchy with the same scale - no concentration with n
+    - Names the Generalised CLT / stable distributions, ideally with Gaussian as alpha=2
+  provenance:
+    status: unverified
+    source: "Wasserman, All of Statistics, SS5.4; Nolan, Univariate Stable Distributions, ch. 1"
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [clt, heavy-tails, cauchy, stable-distributions]
+
+- id: mle-vs-map
+  topic: inference
+  difficulty: 3
+  prompt: |
+    Contrast maximum likelihood estimation with maximum a posteriori
+    estimation. Show how L2 regularisation arises as a MAP estimate, and
+    state what both share that makes them different from full Bayesian
+    inference.
+  answer: |
+    MLE maximises $P(D \mid \theta)$. MAP maximises $P(\theta \mid D) \propto
+    P(D \mid \theta)P(\theta)$ - the likelihood weighted by a prior.
+
+    Taking logs, MAP maximises $\log P(D\mid\theta) + \log P(\theta)$. With a
+    zero-mean Gaussian prior $\theta \sim \mathcal{N}(0, \tau^2 I)$, the log
+    prior is $-\|\theta\|_2^2 / (2\tau^2)$ plus a constant. Maximising is
+    equivalent to minimising negative log-likelihood plus
+    $\lambda\|\theta\|_2^2$ with $\lambda = 1/(2\tau^2)$ - exactly L2 /ridge
+    regularisation. A Laplace prior gives L1 /lasso in the same way.
+
+    What both share: they are *point* estimates. Each returns a single
+    $\hat\theta$ and discards the rest of the distribution, so neither
+    propagates parameter uncertainty into predictions. Full Bayesian
+    inference integrates over the posterior rather than maximising it -
+    which is also why MAP is not invariant to reparameterisation, since the
+    location of a density's mode changes under a change of variables while
+    an integral does not.
+  rubric:
+    - States MLE maximises the likelihood and MAP maximises likelihood times prior
+    - Derives the L2 penalty from a zero-mean Gaussian prior via the log prior term
+    - Identifies lambda as inversely related to the prior variance
+    - States both are point estimates that discard posterior uncertainty, unlike full Bayesian inference
+  provenance:
+    status: unverified
+    source: "Murphy, PML: An Introduction, SS4.5 and SS11.3; Bishop PRML SS3.3"
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [mle, map, regularisation, bayesian]
+
+- id: type-i-ii-power-tradeoff
+  topic: inference
+  difficulty: 3
+  prompt: |
+    Define Type I error, Type II error and statistical power. Explain the
+    mechanical relationship between alpha and beta at fixed sample size, and
+    name the two levers that improve both at once.
+  answer: |
+    Type I error (rate $\alpha$): rejecting $H_0$ when it is true - a false
+    positive. Type II error (rate $\beta$): failing to reject $H_0$ when it
+    is false - a false negative. Power $= 1 - \beta$: the probability of
+    detecting a real effect of a given size.
+
+    At fixed sample size and fixed effect size, $\alpha$ and $\beta$ trade
+    off directly. Lowering $\alpha$ moves the critical value further into the
+    tail, which shrinks the rejection region - so fewer true nulls are
+    rejected, but fewer false nulls are too. You are sliding one threshold
+    along a fixed pair of overlapping sampling distributions.
+
+    The two levers that improve both simultaneously change the distributions
+    rather than the threshold: (1) increase n, which shrinks the standard
+    error and separates the distributions; (2) reduce measurement variance
+    or use a more efficient test/design (e.g. paired instead of unpaired,
+    blocking, better instrumentation). A larger true effect size also helps
+    but is typically not a lever you control.
+  rubric:
+    - Defines Type I as false positive with rate alpha and Type II as false negative with rate beta
+    - Defines power as 1 - beta
+    - Explains alpha/beta trade off at fixed n because one threshold slides over fixed overlapping distributions
+    - Names increasing sample size and reducing variance / more efficient design as the levers that improve both
+  provenance:
+    status: unverified
+    source: "Wasserman, All of Statistics, SS10.1-10.2; Cohen, Statistical Power Analysis, ch. 1"
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [hypothesis-testing, power, type-i-error, type-ii-error]
