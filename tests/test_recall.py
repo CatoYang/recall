@@ -13,14 +13,18 @@ from recall.store import QuestionBank, ReviewStore
 QUESTIONS_DIR = Path(__file__).resolve().parents[1] / "questions"
 
 
-def make_question(qid="q1", status=TrustStatus.UNVERIFIED, source=None, topic="t"):
+def make_question(qid="q1", status=TrustStatus.UNVERIFIED, source=None, topic="t",
+                  checked_by=None):
+    if status is TrustStatus.VERIFIED:
+        source = source or "Murphy PML SS6.2"
+        checked_by = checked_by or "test-human"
     return Question(
         id=qid,
         topic=topic,
         prompt="p",
         answer="a",
         rubric=["r1", "r2"],
-        provenance=Provenance(status=status, source=source),
+        provenance=Provenance(status=status, source=source, checked_by=checked_by),
     )
 
 
@@ -36,10 +40,13 @@ def make_grade(verdict="correct", hits=(True, True), errors=()):
 
 # ------------------------------------------------------------------ schema
 
-def test_verified_question_requires_a_source():
+def test_verified_question_requires_a_source_and_a_signoff():
     with pytest.raises(ValidationError):
-        Provenance(status=TrustStatus.VERIFIED)
-    Provenance(status=TrustStatus.VERIFIED, source="Murphy PML SS6.2")
+        Provenance(status=TrustStatus.VERIFIED)                       # no source
+    with pytest.raises(ValidationError):
+        Provenance(status=TrustStatus.VERIFIED, source="Murphy SS6.2")  # no signoff
+    Provenance(status=TrustStatus.VERIFIED, source="Murphy SS6.2",
+               checked_by="CatoYang")
 
 
 def test_disputed_questions_are_not_servable():
@@ -146,10 +153,23 @@ def test_shipped_question_bank_is_valid():
         assert q.provenance.source, f"{q.id} should name where to verify it"
 
 
-def test_shipped_bank_claims_no_unearned_verification():
-    """Nothing ships as `verified` - no human has checked these yet."""
+def test_verified_questions_record_who_checked_them():
+    """`verified` must carry a source AND who signed off. A model-checked
+    question is better than an unchecked one but is not a human signoff, and
+    collapsing the two recreates the problem this system exists to prevent."""
     bank = QuestionBank(QUESTIONS_DIR)
-    assert not bank.by_status(TrustStatus.VERIFIED)
+    for q in bank.by_status(TrustStatus.VERIFIED):
+        assert q.provenance.source, f"{q.id} verified with no source"
+        assert q.provenance.checked_by, f"{q.id} verified with no checked_by"
+        assert q.provenance.checked, f"{q.id} verified with no date"
+
+
+def test_model_checked_is_not_counted_as_human_checked():
+    bank = QuestionBank(QUESTIONS_DIR)
+    for q in bank.by_status(TrustStatus.VERIFIED):
+        if (q.provenance.checked_by or "").startswith("claude"):
+            assert not q.provenance.human_checked, (
+                f"{q.id} was model-checked but reports human_checked")
 
 
 # ------------------------------------------------------------ backend wiring

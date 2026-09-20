@@ -46,6 +46,7 @@ def set_status(
     *,
     checked: datetime.date | None = None,
     source: str | None = None,
+    checked_by: str | None = None,
 ) -> None:
     """Rewrite one question's provenance in place, preserving the file."""
     text = path.read_text(encoding="utf-8")
@@ -68,7 +69,17 @@ def set_status(
         if ns != 1:
             raise ValueError(f"{question_id}: could not update source")
 
-    # `checked` is the audit trail: when a human last looked.
+    if checked_by:
+        if re.search(r"^\s*checked_by:", new, flags=re.M):
+            new = re.sub(r"^(\s*)checked_by:.*$",
+                         lambda m: f'{m.group(1)}checked_by: "{checked_by}"',
+                         new, count=1, flags=re.M)
+        else:
+            new = re.sub(r"^(\s*)status:[ \t]*\S+[ \t]*$",
+                         lambda m: f'{m.group(0)}\n{m.group(1)}checked_by: "{checked_by}"',
+                         new, count=1, flags=re.M)
+
+    # `checked` is the audit trail: when it was last looked at.
     stamp = (checked or datetime.date.today()).isoformat()
     if re.search(r"^\s*checked:", new, flags=re.M):
         new = re.sub(r"^(\s*)checked:.*$", lambda m: f"{m.group(1)}checked: {stamp}",

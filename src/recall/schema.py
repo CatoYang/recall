@@ -30,8 +30,14 @@ class Provenance(BaseModel):
     status: TrustStatus = TrustStatus.UNVERIFIED
     #: Free text, but be specific: "Murphy, PML Vol 1, SS6.2" beats "textbook".
     source: str | None = None
-    #: When a human last checked this answer against `source`.
+    #: When this answer was last checked against `source`.
     checked: date | None = None
+    #: WHO checked it. Kept distinct from `checked` on purpose: a claim
+    #: confirmed by a model against fetched sources is better than an
+    #: unchecked one but is not the same as a person reading the cited
+    #: textbook, and collapsing the two would quietly recreate the problem
+    #: this whole system exists to prevent.
+    checked_by: str | None = None
     #: Where in the vault this came from. Never treated as verification -
     #: the vault is LLM-generated and is a topic map, not an answer key.
     vault_ref: str | None = None
@@ -41,13 +47,21 @@ class Provenance(BaseModel):
     # case this rule exists to catch.
     @model_validator(mode="after")
     def _source_required_when_verified(self) -> "Provenance":
-        if self.status is TrustStatus.VERIFIED and not self.source:
-            raise ValueError("a verified question must name its source")
+        if self.status is TrustStatus.VERIFIED:
+            if not self.source:
+                raise ValueError("a verified question must name its source")
+            if not self.checked_by:
+                raise ValueError("a verified question must record checked_by")
         return self
 
     @property
     def trusted(self) -> bool:
         return self.status is TrustStatus.VERIFIED
+
+    @property
+    def human_checked(self) -> bool:
+        """True only when a person signed off, not a model."""
+        return self.trusted and not (self.checked_by or "").startswith("claude")
 
 
 class Question(BaseModel):

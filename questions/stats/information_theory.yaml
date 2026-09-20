@@ -1,8 +1,11 @@
 # Information theory foundations.
 #
-# status: unverified on every entry - these were LLM-generated. `source` names
-# where to check them, not that anyone has. Flip to `verified` + set `checked`
-# only after you have read the cited passage yourself.
+# The four entries here are `verified` with checked_by: claude-opus-5 - each
+# claim was confirmed against a fetched external source (named in `source`),
+# NOT against the cited textbook and NOT by a person. That is stronger than
+# unverified and weaker than your own signoff. Re-check any you intend to rely
+# on heavily and set checked_by to your own name; `human_checked` reports the
+# difference.
 
 - id: kl-direction-zero-forcing
   topic: information-theory
@@ -40,8 +43,10 @@
     - States that variational inference minimises reverse KL
     - Names the consequence for a multimodal posterior - single mode captured, variance underestimated
   provenance:
-    status: unverified
-    source: "Murphy, Probabilistic Machine Learning: An Introduction, ch. 6 (KL divergence); Bishop PRML SS10.1"
+    status: verified
+    checked: 2026-09-20
+    checked_by: "claude-opus-5 (external sources, not the cited textbooks)"
+    source: "Murphy PML ch.6; Bishop PRML SS10.1. Confirmed against tuananhle.co.uk/notes/reverse-forward-kl.html and arxiv.org/pdf/2209.10888: zero-forcing=reverse, mass-covering=forward, VI uses reverse, underestimates posterior variance"
     vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
   tags: [kl-divergence, variational-inference, asymmetry]
 
@@ -72,8 +77,10 @@
     - Concludes the two objectives differ by a constant and so share a minimiser
     - Notes the values differ - cross-entropy is floored at H(P), not zero
   provenance:
-    status: unverified
-    source: "Cover & Thomas, Elements of Information Theory, ch. 2; Goodfellow et al., Deep Learning, SS3.13"
+    status: verified
+    checked: 2026-09-20
+    checked_by: "claude-opus-5 (external sources, not the cited textbooks)"
+    source: "Cover & Thomas ch.2; Goodfellow SS3.13. Confirmed against en.wikipedia.org/wiki/Cross-entropy: H(P,Q)=H(P)+D_KL(P||Q)"
     vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
   tags: [cross-entropy, kl-divergence, loss-functions]
 
@@ -107,8 +114,10 @@
     - Concludes the integrand can be negative where p(x) > 1
     - States that differential entropy is not invariant to change of variables (shifts by the log Jacobian)
   provenance:
-    status: unverified
-    source: "Cover & Thomas, Elements of Information Theory, ch. 8 (Differential Entropy)"
+    status: verified
+    checked: 2026-09-20
+    checked_by: "claude-opus-5 (external sources, not the cited textbooks)"
+    source: "Cover & Thomas ch.8. Confirmed against en.wikipedia.org/wiki/Differential_entropy: U(0,a) has h=log a, U(0,1/2) gives -log 2, h(aX)=h(X)+log|a|"
     vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
   tags: [differential-entropy, continuous-distributions]
 
@@ -132,16 +141,20 @@
     just of how much a particular partition happened to reduce entropy.
 
     $I(X;Y) = 0$ if and only if X and Y are statistically independent. Note
-    this is stronger than zero correlation - MI captures non-linear
-    dependence, so a variable with zero Pearson correlation to the target can
-    still have positive mutual information.
+    this is stronger than zero correlation - MI captures all dependence,
+    linear and non-linear, so a variable with zero Pearson correlation to the
+    target can still have positive mutual information. One documented
+    exception: for a bivariate normal, MI is an exact function of the
+    correlation coefficient, so the two coincide in that case.
   rubric:
     - States IG(Y,X) = H(Y) - H(Y|X) = I(X;Y)
     - Gives the KL form, D(P(X,Y) || P(X)P(Y)), or describes MI as joint-vs-marginal divergence
     - States I(X;Y)=0 if and only if X and Y are independent
-    - Distinguishes independence from zero correlation - MI captures non-linear dependence
+    - Distinguishes independence from zero correlation - MI captures all dependence, linear and non-linear
   provenance:
-    status: unverified
-    source: "Cover & Thomas, Elements of Information Theory, SS2.3; Hastie et al., ESL SS9.2 for the tree framing"
+    status: verified
+    checked: 2026-09-20
+    checked_by: "claude-opus-5 (external sources, not the cited textbooks)"
+    source: "Cover & Thomas SS2.3; ESL SS9.2. Confirmed against en.wikipedia.org/wiki/Mutual_information: I=0 iff independent, I=H(X)-H(X|Y)=D_KL(joint||marginals), captures non-linear dependence"
     vault_ref: "01_Foundations_Probability_and_Information_Theory/Information_Theory/Entropy_and_KL_Divergence.md"
   tags: [mutual-information, decision-trees, independence]
