@@ -1,0 +1,22 @@
+{
+  "gemini-3.6-flash": {
+    "verdict": "correct",
+    "conflict_flagged": true,
+    "safe_for_unverified": true,
+    "errors": [
+      "REFERENCE CONFLICT: The rubric and reference answer invert the definitions of forward and reverse KL divergence. Forward KL D(P||Q) is mass-covering (mean-seeking), because an expectation under P penalizes Q(x) -> 0 wherever P(x) > 0. Reverse KL D(Q||P) is zero-forcing (mode-seeking), because an expectation under Q penalizes Q(x) > 0 wherever P(x) -> 0. Minimising reverse KL in variational inference forces a unimodal variational family Q to collapse onto a single mode of a multimodal posterior P."
+    ],
+    "at": "2026-09-20T21:11:03",
+    "round": 4
+  },
+  "gemini-3.8-flash": {
+    "verdict": "correct",
+    "conflict_flagged": true,
+    "safe_for_unverified": true,
+    "errors": [
+      "REFERENCE CONFLICT: The rubric and reference answer are factually incorrect. Forward KL D(P||Q) is mass-covering (zero-avoiding), not zero-forcing/mode-seeking. Reverse KL D(Q||P) is zero-forcing (mode-seeking), not mass-covering. Consequently, VI minimizes reverse KL, causing a unimodal variational posterior to collapse to a single mode rather than covering all modes. The candidate's statements are entirely correct."
+    ],
+    "at": "2026-09-20T21:25:47",
+    "round": 8
+  }
+}

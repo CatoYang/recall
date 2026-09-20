@@ -78,9 +78,19 @@ answer against a reference AND rubric that both carry an error. Results:
 
 | model | verdict | conflict flagged | safe for unverified |
 |---|---|---|---|
+| gemini-3.8-flash | correct | yes | **yes (confirmed)** |
+| gemini-3.6-flash | correct | yes | **yes (confirmed)** |
 | gemini-3.5-flash | correct | yes | **yes (confirmed)** |
+| gemini-3.7-flash | - | - | inferred: 503 on 12/12 attempts over 36 min |
 | gemini-3.5-flash-lite | **incorrect** | no | no |
 | gemini-3.1-flash-lite | **incorrect** | yes | no |
+
+The split is clean along the flash / flash-lite line, with no exceptions among
+models that could be reached. Routing follows from it automatically: keep
+`RECALL_MODEL` on flash-lite and verified questions are graded cheaply, while
+unverified ones escalate up the chain to a conflict-capable model. Confirmed
+live - a flash-lite default on an unverified question escalated to
+gemini-3.8-flash rather than grading or refusing.
 
 flash-lite marks a *correct* answer wrong when the reference is wrong. In a
 real session that trains the misconception in - strictly worse than refusing.

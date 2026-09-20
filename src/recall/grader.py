@@ -135,10 +135,11 @@ class AnthropicGrader:
 #: outright (limit: 0), so flash-lite is the availability floor.
 GEMINI_FALLBACKS = [
     "gemini-3.8-flash",
-    "gemini-3.7-flash",
+    "gemini-3.6-flash",
     "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
     "gemini-3.1-flash-lite",
+    "gemini-3.7-flash",       # last: 503 on every attempt during measurement
 ]
 
 #: Models able to override a wrong reference and report a REFERENCE CONFLICT.
@@ -148,6 +149,8 @@ GEMINI_FALLBACKS = [
 #: Measured on eval/fixtures.yaml::kl-reference-and-rubric-wrong - reference
 #: AND rubric both carry the error, candidate answer is correct:
 #:
+#:   gemini-3.8-flash       verdict=correct,   conflict flagged   CONFIRMED
+#:   gemini-3.6-flash       verdict=correct,   conflict flagged   CONFIRMED
 #:   gemini-3.5-flash       verdict=correct,   conflict flagged   CONFIRMED
 #:   gemini-3.5-flash-lite  verdict=INCORRECT, no conflict        unsafe
 #:   gemini-3.1-flash-lite  verdict=INCORRECT, conflict flagged   unsafe
@@ -156,12 +159,14 @@ GEMINI_FALLBACKS = [
 #: flash-lite marks a CORRECT answer wrong when the reference is wrong, which
 #: would train the misconception in - strictly worse than refusing to grade.
 #:
-#: 3.8/3.7/3.6-flash and the Pro tier are INFERRED from tier, not confirmed -
-#: they were 503/limit-0 during measurement. Re-run the fixture to confirm.
+#: The whole flash tier that could be reached is confirmed. gemini-3.7-flash
+#: returned 503 on every one of 12 attempts over ~36 minutes (see
+#: eval/poll_congested.py, eval/tier_results.json) and stays inferred; the Pro
+#: tier is unreachable on the free plan (limit: 0).
 CONFLICT_CAPABLE = frozenset({
-    "gemini-3.8-flash",       # inferred
-    "gemini-3.7-flash",       # inferred
-    "gemini-3.6-flash",       # inferred
+    "gemini-3.8-flash",       # CONFIRMED
+    "gemini-3.7-flash",       # inferred - 503 across 12 attempts / 36 min
+    "gemini-3.6-flash",       # CONFIRMED
     "gemini-3.5-flash",       # CONFIRMED
     "gemini-flash-latest",    # inferred (alias)
     "gemini-3.1-pro-preview", # inferred (free tier: limit 0)
