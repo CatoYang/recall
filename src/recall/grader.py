@@ -7,9 +7,12 @@ Two deliberate choices, independent of which model does the grading:
    right vocabulary without the right mechanics - exactly the failure this
    tool exists to catch.
 
-2. The reference answer is labelled with its trust status in the prompt. For
-   an unverified question the model is told the reference may itself be wrong
-   and is asked to flag a conflict rather than defer to it.
+2. The reference answer is labelled with its trust status in the prompt, at
+   three levels rather than two. Human-signed references are authoritative;
+   *model*-checked ones are presented as probably-right but still challengeable;
+   unverified ones are presented as suspect. Collapsing the middle level into
+   the first would make `checked_by` decorative - the grader would defer
+   absolutely to a reference no person has ever read.
 
 Backends are pluggable because the capability a grader needs depends on the
 job: grading against a *verified* reference is comparison (mid-tier models are
@@ -49,8 +52,16 @@ Verdicts: `correct` = every rubric point hit and no errors. `partial` = some poi
 hit, no serious errors. `incorrect` = most points missed, or any fundamental error."""
 
 _TRUSTED_NOTE = (
-    "This reference answer has been verified against {source}. Treat it as "
-    "authoritative."
+    "This reference answer has been verified by a person against {source}. "
+    "Treat it as authoritative."
+)
+_MODEL_CHECKED_NOTE = (
+    "This reference answer was checked against external sources by a model "
+    "({checked_by}), not by a person. Source: {source}. It is likely correct, "
+    "so grade the candidate against the rubric in the normal way - but it has "
+    "had no human signoff. If it states something you are confident is wrong, "
+    "record that in `errors` as a REFERENCE CONFLICT instead of marking the "
+    "candidate wrong for disagreeing with it."
 )
 _UNTRUSTED_NOTE = (
     "WARNING: this reference answer is LLM-generated and has NOT been verified "
@@ -63,11 +74,12 @@ _UNTRUSTED_NOTE = (
 
 def build_prompt(question: Question, answer: str) -> str:
     p = question.provenance
-    note = (
-        _TRUSTED_NOTE.format(source=p.source)
-        if p.status is TrustStatus.VERIFIED
-        else _UNTRUSTED_NOTE
-    )
+    if p.status is not TrustStatus.VERIFIED:
+        note = _UNTRUSTED_NOTE
+    elif p.human_checked:
+        note = _TRUSTED_NOTE.format(source=p.source)
+    else:
+        note = _MODEL_CHECKED_NOTE.format(source=p.source, checked_by=p.checked_by)
     points = "\n".join(f"{i}. {r}" for i, r in enumerate(question.rubric, 1))
     return f"""<question>
 {question.prompt}
@@ -244,6 +256,13 @@ class GeminiGrader:
         # able to overrule it. Degrading to a model that cannot do that would
         # silently turn a safe grade into one that marks correct answers wrong
         # - the worst outcome this tool can produce. Refuse instead.
+        #
+        # Deliberately gated on `trusted`, not on `human_checked`: a
+        # model-checked reference is challengeable in the *prompt* but is still
+        # probably right, and the measured flash-lite failure was specifically
+        # about overruling a reference that is wrong. Gating the middle tier
+        # here too would route the entire bank to the congested flash tier to
+        # guard against a case whose prior is now low.
         if not question.provenance.trusted:
             chain = [m for m in chain if m in CONFLICT_CAPABLE]
             if not chain:

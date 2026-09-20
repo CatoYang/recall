@@ -143,6 +143,27 @@ def test_prompt_marks_verified_reference_authoritative():
     assert "authoritative" in p
 
 
+def test_prompt_keeps_model_checked_reference_challengeable():
+    """The middle tier is the whole point of `checked_by`. A reference no
+    person has read must not be handed to the grader as authoritative, or the
+    distinction the schema goes out of its way to preserve does nothing."""
+    q = make_question(status=TrustStatus.VERIFIED, source="Cover & Thomas ch.2",
+                      checked_by="claude-opus-5 (external sources)")
+    p = build_prompt(q, "my answer")
+    assert "authoritative" not in p
+    assert "not by a person" in p
+    assert "REFERENCE CONFLICT" in p
+
+
+def test_prompt_trust_branches_are_distinct():
+    unverified = build_prompt(make_question(), "a")
+    model_checked = build_prompt(
+        make_question(status=TrustStatus.VERIFIED, checked_by="claude-opus-5"), "a")
+    human = build_prompt(
+        make_question(status=TrustStatus.VERIFIED, checked_by="cato"), "a")
+    assert len({unverified, model_checked, human}) == 3
+
+
 # ------------------------------------------------------- the shipped bank
 
 def test_shipped_question_bank_is_valid():

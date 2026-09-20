@@ -20,16 +20,32 @@ A question's `answer` is only an authoritative grading reference when
 `provenance.status is VERIFIED`, which requires a human to have checked it
 against `provenance.source`. Everything else follows from this:
 
-- **Never mark a question `verified` that you generated.** LLM-authored
-  questions ship as `unverified`. `source` means "where to check this", not
-  "this was checked". `tests/test_recall.py::test_shipped_bank_claims_no_unearned_verification`
-  enforces this and should not be relaxed.
+- **Never mark a question `verified` on your own say-so.** LLM-authored
+  questions ship as `unverified`; `source` then means "where to check this",
+  not "this was checked". A model *may* promote one after confirming each
+  claim against a genuinely fetched external source, but only if it records
+  that in `checked_by` (e.g. `claude-opus-5 (external sources, not the cited
+  textbooks)`) and names in `source` what was checked against what.
+  `Provenance.human_checked` then stays False, which is the point: it keeps
+  "a model read a source" separate from "a person signed off".
+  `test_verified_questions_record_who_checked_them` and
+  `test_model_checked_is_not_counted_as_human_checked` enforce this pair and
+  should not be relaxed.
 - `vault_ref` points into `~/AI-Knowledge-Repository`, which is an
   LLM-generated note vault. It is a topic map, never evidence of correctness.
-- `grader.py` sends a different trust preamble depending on status. For
-  unverified questions it tells the model the reference may be wrong and to
-  report a `REFERENCE CONFLICT` rather than mark the candidate wrong. Keep
-  that branch intact when editing the prompt.
+- `grader.py` sends a different trust preamble at **three** levels, keyed on
+  `status` and then on `Provenance.human_checked`:
+
+  | provenance | preamble | grader told to |
+  |---|---|---|
+  | `verified`, `checked_by` a person | `_TRUSTED_NOTE` | treat as authoritative |
+  | `verified`, `checked_by` a model | `_MODEL_CHECKED_NOTE` | probably right, but flag `REFERENCE CONFLICT` if confident otherwise |
+  | `unverified` | `_UNTRUSTED_NOTE` | assume it may be wrong, flag conflicts |
+
+  The middle row is why `checked_by` exists. Collapsing it into the first
+  would hand the grader a reference no person has read and tell it to defer
+  absolutely - which is the failure this whole system is built to avoid.
+  Keep all three branches intact when editing the prompt.
 
 ## Architecture
 
@@ -101,6 +117,13 @@ real bug caught by the eval.
 
 Corollary: verifying a question makes it *cheaper* to grade, because the cheap
 tier becomes safe for it.
+
+The routing gate keys on `trusted`, **not** on `human_checked`, on purpose. A
+model-checked reference is challengeable in the prompt but is still probably
+right, and the measured flash-lite failure was specifically about overruling a
+reference that is *wrong*. Gating the middle tier here as well would push the
+whole bank onto the congested flash tier to defend against a case whose prior
+is now low. The prompt carries that caution instead of the router.
 
 Two traps when measuring this:
 - Flipping provenance to `verified` to bypass the gate also switches the
