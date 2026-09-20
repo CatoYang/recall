@@ -150,3 +150,32 @@ def test_shipped_bank_claims_no_unearned_verification():
     """Nothing ships as `verified` - no human has checked these yet."""
     bank = QuestionBank(QUESTIONS_DIR)
     assert not bank.by_status(TrustStatus.VERIFIED)
+
+
+# ------------------------------------------------------------ backend wiring
+
+def test_unknown_backend_rejected():
+    from recall.grader import make_grader
+    with pytest.raises(ValueError, match="unknown backend"):
+        make_grader(backend="mistral")
+
+
+def test_missing_credential_is_actionable(monkeypatch):
+    """A missing key must say where to get one, not fail deep in an SDK."""
+    from recall.grader import MissingCredential, make_grader
+    import recall.config as cfg
+
+    monkeypatch.setattr(cfg, "_loaded", True)          # skip .env
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("GOOGLE_API_KEY", raising=False)
+    with pytest.raises(MissingCredential, match="aistudio.google.com"):
+        make_grader(backend="gemini")
+
+
+def test_both_backends_share_one_prompt():
+    """Backends must not drift apart - the prompt is the graded contract."""
+    from recall.grader import AnthropicGrader, GeminiGrader, build_prompt
+    import inspect
+    for cls in (AnthropicGrader, GeminiGrader):
+        assert "build_prompt" in inspect.getsource(cls.grade)
+        assert "SYSTEM" in inspect.getsource(cls.grade)

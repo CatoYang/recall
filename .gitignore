@@ -7,3 +7,6 @@ __pycache__/
 # review state: high-churn local data, not content
 state/
 *.db
+
+# credentials
+.env

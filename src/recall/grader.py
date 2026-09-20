@@ -1,6 +1,6 @@
 """LLM grading of a free-text answer against a stored rubric.
 
-Two deliberate choices here:
+Two deliberate choices, independent of which model does the grading:
 
 1. The model grades against the *rubric points*, not against prose similarity
    to the reference answer. Similarity grading rewards an answer that uses the
@@ -10,15 +10,22 @@ Two deliberate choices here:
 2. The reference answer is labelled with its trust status in the prompt. For
    an unverified question the model is told the reference may itself be wrong
    and is asked to flag a conflict rather than defer to it.
+
+Backends are pluggable because the capability a grader needs depends on the
+job: grading against a *verified* reference is comparison (mid-tier models are
+fine), while grading against an *unverified* one requires the grader to supply
+its own domain knowledge (frontier only).
 """
 
 from __future__ import annotations
 
-import anthropic
+from typing import Protocol
 
+from .config import backend_name, get_key, model_override
 from .schema import Grade, Question, TrustStatus
 
-MODEL = "claude-opus-5"
+ANTHROPIC_MODEL = "claude-opus-5"
+GEMINI_MODEL = "gemini-flash-latest"
 
 SYSTEM = """You are a rigorous examiner for an advanced ML/statistics assessment.
 
@@ -83,10 +90,32 @@ def build_prompt(question: Question, answer: str) -> str:
 </candidate_answer>"""
 
 
-class Grader:
-    def __init__(self, client: anthropic.Anthropic | None = None, model: str = MODEL):
-        self.client = client or anthropic.Anthropic()
-        self.model = model
+class MissingCredential(RuntimeError):
+    pass
+
+
+class GraderBackend(Protocol):
+    name: str
+    model: str
+
+    def grade(self, question: Question, answer: str) -> Grade: ...
+
+
+class AnthropicGrader:
+    name = "anthropic"
+
+    def __init__(self, model: str | None = None, client=None):
+        import anthropic
+
+        self.model = model or ANTHROPIC_MODEL
+        if client is None:
+            key = get_key("ANTHROPIC_API_KEY")
+            if not key:
+                raise MissingCredential(
+                    "ANTHROPIC_API_KEY is not set. Put it in .env or export it."
+                )
+            client = anthropic.Anthropic(api_key=key)
+        self.client = client
 
     def grade(self, question: Question, answer: str) -> Grade:
         response = self.client.messages.parse(
@@ -98,3 +127,53 @@ class Grader:
             output_format=Grade,
         )
         return response.parsed_output
+
+
+class GeminiGrader:
+    name = "gemini"
+
+    def __init__(self, model: str | None = None, client=None):
+        from google import genai
+
+        self.model = model or GEMINI_MODEL
+        if client is None:
+            key = get_key("GEMINI_API_KEY") or get_key("GOOGLE_API_KEY")
+            if not key:
+                raise MissingCredential(
+                    "GEMINI_API_KEY is not set. Get one at "
+                    "https://aistudio.google.com/apikey, then put it in .env."
+                )
+            client = genai.Client(api_key=key)
+        self.client = client
+
+    def grade(self, question: Question, answer: str) -> Grade:
+        from google.genai import types
+
+        response = self.client.models.generate_content(
+            model=self.model,
+            contents=build_prompt(question, answer),
+            config=types.GenerateContentConfig(
+                system_instruction=SYSTEM,
+                response_mime_type="application/json",
+                response_schema=Grade,
+            ),
+        )
+        parsed = response.parsed
+        # The SDK returns the pydantic instance when response_schema is a model,
+        # but falls back to a dict on some paths - normalise either way.
+        return parsed if isinstance(parsed, Grade) else Grade.model_validate(parsed)
+
+
+BACKENDS = {"anthropic": AnthropicGrader, "gemini": GeminiGrader}
+
+
+def make_grader(backend: str | None = None, model: str | None = None) -> GraderBackend:
+    name = (backend or backend_name()).lower()
+    if name not in BACKENDS:
+        raise ValueError(f"unknown backend {name!r}; choose from {sorted(BACKENDS)}")
+    return BACKENDS[name](model=model or model_override())
+
+
+#: Backwards-compatible alias - `Grader()` still resolves via config.
+def Grader(*args, **kwargs) -> GraderBackend:  # noqa: N802
+    return make_grader(*args, **kwargs)

@@ -44,6 +44,40 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_models(args: argparse.Namespace) -> int:
+    """Verify credentials and list models the key can actually reach."""
+    from .config import backend_name, get_key
+
+    backend = args.backend or backend_name()
+    if backend == "gemini":
+        key = get_key("GEMINI_API_KEY") or get_key("GOOGLE_API_KEY")
+        if not key:
+            print("GEMINI_API_KEY not set.\n\n"
+                  "  1. Get a key at https://aistudio.google.com/apikey\n"
+                  "  2. echo 'GEMINI_API_KEY=...' >> .env\n", file=sys.stderr)
+            return 1
+        from google import genai
+
+        client = genai.Client(api_key=key)
+        print(f"key ok (...{key[-4:]}). Models supporting generateContent:\n")
+        for m in client.models.list():
+            actions = getattr(m, "supported_actions", None) or []
+            if "generateContent" in actions:
+                print(f"  {m.name.removeprefix('models/')}")
+        return 0
+
+    key = get_key("ANTHROPIC_API_KEY")
+    if not key:
+        print("ANTHROPIC_API_KEY not set.", file=sys.stderr)
+        return 1
+    import anthropic
+
+    print(f"key ok (...{key[-4:]}). Models:\n")
+    for m in anthropic.Anthropic(api_key=key).models.list():
+        print(f"  {m.id}")
+    return 0
+
+
 def cmd_stats(args: argparse.Namespace) -> int:
     store = ReviewStore(args.db)
     s = store.stats()
@@ -66,6 +100,10 @@ def main(argv: list[str] | None = None) -> int:
         func=cmd_check
     )
     sub.add_parser("stats", help="review history summary").set_defaults(func=cmd_stats)
+
+    p_models = sub.add_parser("models", help="verify credentials, list reachable models")
+    p_models.add_argument("--backend", choices=["anthropic", "gemini"], default=None)
+    p_models.set_defaults(func=cmd_models)
 
     args = parser.parse_args(argv)
     if args.cmd is None:
