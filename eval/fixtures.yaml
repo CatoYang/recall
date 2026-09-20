@@ -1,0 +1,215 @@
+# Grader eval fixtures.
+#
+# Each entry is an answer with a KNOWN quality, used to measure whether a
+# candidate grader model catches what it should. The metric that matters is
+# the FALSE-CORRECT rate: a grader that passes a wrong answer silently
+# reinforces the misconception, while a grader that is too harsh merely
+# annoys you into checking. Leniency is the dangerous direction.
+#
+# subtlety:
+#   blatant  - flatly wrong, unhedged. Any usable grader must catch this.
+#   moderate - wrong, but embedded in otherwise competent prose.
+#   subtle   - mostly right, one load-bearing claim inverted or misattributed.
+#              This tier is what separates models.
+
+- id: kl-blatant
+  question_id: kl-direction-zero-forcing
+  expect: incorrect
+  subtlety: blatant
+  planted_errors:
+    - forward KL labelled zero-forcing (it is mass-covering)
+    - reverse KL labelled mass-covering (it is zero-forcing)
+    - claims VI minimises forward KL (it minimises reverse)
+  answer: |
+    Forward KL, D(P||Q), is the zero-forcing one because it forces Q to zero
+    wherever P is small. Reverse KL is mass-covering. Variational inference
+    minimises the forward KL, which is why it covers all the modes of the
+    posterior.
+
+- id: kl-subtle
+  question_id: kl-direction-zero-forcing
+  expect: incorrect
+  subtlety: subtle
+  planted_errors:
+    - states the unbounded penalty for reverse KL arises where P>0 and Q to 0
+      (that is the forward-KL region; reverse penalises Q>0 where P to 0)
+  answer: |
+    Reverse KL, D(Q||P), is zero-forcing and forward KL is mass-covering. The
+    asymmetry comes from which distribution the expectation is taken under.
+    For reverse KL the expectation is under Q, and the divergence blows up in
+    regions where P(x) > 0 but Q(x) tends to zero, so Q is driven to zero
+    outside P's support. Variational inference minimises reverse KL, so a
+    unimodal family fitted to a multimodal posterior locks onto one mode and
+    underestimates posterior variance.
+
+- id: kl-correct
+  question_id: kl-direction-zero-forcing
+  expect: correct
+  subtlety: none
+  planted_errors: []
+  answer: |
+    Reverse KL, D(Q||P), is zero-forcing (mode-seeking); forward KL, D(P||Q),
+    is mass-covering (zero-avoiding). The asymmetry follows from which
+    distribution the expectation is taken under. Forward KL integrates under
+    P, so any region with P(x) > 0 and Q(x) -> 0 contributes an unbounded
+    penalty, forcing Q to put mass everywhere P does. Reverse KL integrates
+    under Q, so the unbounded penalty occurs where Q(x) > 0 and P(x) -> 0,
+    forcing Q to zero outside P's support and letting it ignore modes.
+    Variational inference minimises reverse KL because that is the tractable
+    direction (the ELBO); the consequence is that a unimodal variational
+    family on a multimodal posterior collapses to a single mode and
+    underestimates posterior variance.
+
+- id: bias-variance-wrong-reason
+  question_id: bias-variance-cross-term
+  expect: incorrect
+  subtlety: subtle
+  planted_errors:
+    - attributes the vanishing cross-term to independence of bias and variance
+      rather than to E[f-hat - f-bar] = 0 by definition of f-bar
+  answer: |
+    Expected squared error splits into squared bias, variance and irreducible
+    error. There is no cross-term because bias and variance are statistically
+    independent of one another, so the expectation of their product factorises
+    into the product of expectations and drops out. Bias and variance are both
+    expectations over training sets, while the irreducible error is the
+    variance of the noise term.
+
+- id: bias-variance-correct
+  question_id: bias-variance-cross-term
+  expect: correct
+  subtlety: none
+  planted_errors: []
+  answer: |
+    Write f-hat for the fit on D and f-bar for its expectation over D. Split
+    f-hat - f = (f-hat - f-bar) + (f-bar - f) and square. The cross-term is
+    2(f-bar - f) E[f-hat - f-bar], and E[f-hat - f-bar] = 0 by the definition
+    of f-bar, so it vanishes. The noise term drops separately because epsilon
+    has zero mean and is independent of D. Squared bias and variance are both
+    expectations over training sets D; the irreducible error is Var(epsilon),
+    taken over the observation noise and not over D at all. The usual
+    confusion is treating the estimator's sampling variance as if it were the
+    noise variance.
+
+- id: pvalue-inverted
+  question_id: p-value-precise-definition
+  expect: incorrect
+  subtlety: moderate
+  planted_errors:
+    - defines the p-value as P(H0 | data), inverting the conditioning
+  answer: |
+    A p-value is the probability that the null hypothesis is true given the
+    data you observed. So p = 0.04 means there is a 4% chance the null is
+    correct and a 96% chance your effect is real. That is why we reject the
+    null below 0.05 - it means we are confident the alternative holds.
+
+- id: pvalue-correct
+  question_id: p-value-precise-definition
+  expect: correct
+  subtlety: none
+  planted_errors: []
+  answer: |
+    A p-value is P(T >= t_obs | H0): the probability, computed assuming the
+    null is true, of a test statistic at least as extreme as observed. It is
+    not P(H0 | data) - the conditioning runs the other way, and inverting it
+    requires a prior on H0 via Bayes' theorem, which the p-value neither uses
+    nor supplies. So p = 0.04 does not mean a 4% chance of a fluke; it means
+    data this extreme would arise 4% of the time if the null held. The
+    fraction of significant findings that are false additionally depends on
+    the prior probability the effect is real and on the power of the test.
+
+- id: clt-mean-exists
+  question_id: clt-failure-cauchy
+  expect: incorrect
+  subtlety: subtle
+  planted_errors:
+    - claims the Cauchy mean exists and is merely slowly converging (it is
+      undefined - the defining integral does not converge absolutely)
+  answer: |
+    The classical CLT needs i.i.d. samples with finite mean and finite
+    variance. Cauchy has a well-defined mean at its location parameter but
+    infinite variance, so the CLT does not apply and convergence to a normal
+    is merely very slow rather than absent. The sample mean of Cauchy draws
+    is itself Cauchy. The relevant generalisation is the Generalised CLT,
+    where sums converge to stable distributions with the Gaussian at
+    alpha = 2.
+
+- id: map-invariance
+  question_id: mle-vs-map
+  expect: incorrect
+  subtlety: subtle
+  planted_errors:
+    - claims MAP is invariant to reparameterisation (it is not - the mode of a
+      density moves under a change of variables)
+  answer: |
+    MLE maximises the likelihood; MAP maximises likelihood times prior. With a
+    zero-mean Gaussian prior the log prior contributes a squared-norm penalty,
+    which is exactly L2 regularisation, with lambda inversely proportional to
+    the prior variance. Both are point estimates that discard posterior
+    uncertainty. Unlike full Bayesian inference, though, MAP has the advantage
+    of being invariant to reparameterisation, since the mode is a property of
+    the distribution itself.
+
+- id: entropy-partial
+  question_id: differential-entropy-negative
+  expect: partial
+  subtlety: none
+  planted_errors: []
+  answer: |
+    Differential entropy can be negative. For example a uniform distribution
+    on [0, a] has entropy log a, which is negative when a < 1. The discrete
+    non-negativity argument relies on probabilities being bounded by one.
+
+# ---------------------------------------------------------------------------
+# Reference-conflict fixture.
+#
+# The stored reference is REPLACED with the error your vault actually
+# contained, and the candidate answer is CORRECT. A grader that defers to the
+# reference will mark a right answer wrong; a good one flags the conflict.
+# This is the behaviour the `unverified` provenance path depends on, and it is
+# the hardest thing we ask a grader to do - it must supply its own knowledge
+# rather than pattern-match the reference.
+- id: kl-reference-is-wrong
+  question_id: kl-direction-zero-forcing
+  expect: correct
+  subtlety: reference-conflict
+  expect_conflict: true
+  planted_errors: []
+  reference_override: |
+    Forward KL, D(P||Q), is zero-forcing: it forces Q to zero wherever P is
+    small, which is why it is called mode-seeking. Reverse KL, D(Q||P), is
+    mass-covering and is the direction variational inference minimises, which
+    is why VI spreads mass across all modes of the posterior.
+  answer: |
+    Reverse KL, D(Q||P), is zero-forcing (mode-seeking); forward KL is
+    mass-covering. Forward KL takes the expectation under P, so a region with
+    P(x) > 0 and Q(x) -> 0 incurs an unbounded penalty, forcing Q to cover
+    P's support. Reverse KL takes the expectation under Q, so the penalty is
+    unbounded where Q(x) > 0 and P(x) -> 0, forcing Q to zero outside P's
+    support. Variational inference minimises reverse KL, so a unimodal family
+    collapses onto a single mode of a multimodal posterior.
+
+# The uncompromised version: BOTH reference and rubric carry the error, so the
+# grader has no correct text to lean on and must use its own knowledge.
+- id: kl-reference-and-rubric-wrong
+  question_id: kl-direction-zero-forcing
+  expect: correct
+  subtlety: reference-conflict
+  expect_conflict: true
+  planted_errors: []
+  reference_override: |
+    Forward KL, D(P||Q), is zero-forcing and mode-seeking. Reverse KL,
+    D(Q||P), is mass-covering, and variational inference minimises reverse KL,
+    which is why VI spreads mass across all modes.
+  rubric_override:
+    - States forward KL D(P||Q) is zero-forcing and mode-seeking
+    - States reverse KL D(Q||P) is mass-covering
+    - States variational inference minimises reverse KL so it covers all modes
+  answer: |
+    Reverse KL, D(Q||P), is zero-forcing (mode-seeking); forward KL is
+    mass-covering. Forward KL takes the expectation under P, so P(x) > 0 with
+    Q(x) -> 0 gives an unbounded penalty, forcing Q to cover P's support.
+    Reverse KL takes the expectation under Q, so the penalty is unbounded
+    where Q(x) > 0 and P(x) -> 0, forcing Q to zero outside P's support.
+    Variational inference minimises reverse KL, which is why a unimodal
+    family collapses onto a single mode of a multimodal posterior.

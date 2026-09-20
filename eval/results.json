@@ -1,0 +1,235 @@
+{
+  "gemini-3.5-flash-lite::kl-blatant": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 3,
+    "errors": [
+      "Forward KL, D(P||Q), is the zero-forcing one",
+      "Reverse KL is mass-covering",
+      "Variational inference minimises the forward KL, which is why it covers all the modes of the posterior."
+    ]
+  },
+  "gemini-3.5-flash-lite::kl-subtle": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "partial",
+    "score": 0.8,
+    "n_errors": 1,
+    "errors": [
+      "Candidate inverted the unbounded-penalty condition, ascribing the P(x) > 0 and Q(x) -> 0 condition to reverse KL instead of forward KL."
+    ]
+  },
+  "gemini-3.5-flash-lite::kl-correct": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.5-flash-lite::bias-variance-wrong-reason": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.4,
+    "n_errors": 1,
+    "errors": [
+      "There is no cross-term because bias and variance are statistically independent of one another, so the expectation of their product factorises into the product of expectations and drops out."
+    ]
+  },
+  "gemini-3.5-flash-lite::bias-variance-correct": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.5-flash-lite::pvalue-inverted": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 3,
+    "errors": [
+      "A p-value is the probability that the null hypothesis is true given the data you observed.",
+      "So p = 0.04 means there is a 4% chance the null is correct and a 96% chance your effect is real.",
+      "That is why we reject the null below 0.05 - it means we are confident the alternative holds."
+    ]
+  },
+  "gemini-3.5-flash-lite::pvalue-correct": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.5-flash-lite::clt-mean-exists": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.75,
+    "n_errors": 1,
+    "errors": [
+      "Cauchy has a well-defined mean at its location parameter but infinite variance, so the CLT does not apply and convergence to a normal is merely very slow rather than absent."
+    ]
+  },
+  "gemini-3.5-flash-lite::map-invariance": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "partial",
+    "score": 1.0,
+    "n_errors": 1,
+    "errors": [
+      "MAP has the advantage of being invariant to reparameterisation, since the mode is a property of the distribution itself."
+    ]
+  },
+  "gemini-3.5-flash-lite::entropy-partial": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "partial",
+    "score": 0.5,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.1-flash-lite::kl-blatant": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 4,
+    "errors": [
+      "Forward KL, D(P||Q), is the zero-forcing one",
+      "Reverse KL is mass-covering",
+      "Variational inference minimises the forward KL",
+      "it [VI] covers all the modes of the posterior"
+    ]
+  },
+  "gemini-3.1-flash-lite::kl-subtle": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "partial",
+    "score": 0.8,
+    "n_errors": 1,
+    "errors": [
+      "The candidate claimed for reverse KL: 'the divergence blows up in regions where P(x) > 0 but Q(x) tends to zero'. This is the error for the forward KL direction, not reverse."
+    ]
+  },
+  "gemini-3.1-flash-lite::kl-correct": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.1-flash-lite::bias-variance-wrong-reason": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.6,
+    "n_errors": 1,
+    "errors": [
+      "The cross-term vanishes because bias and variance are statistically independent of one another, so the expectation of their product factorises into the product of expectations and drops out."
+    ]
+  },
+  "gemini-3.1-flash-lite::bias-variance-correct": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.1-flash-lite::pvalue-inverted": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 3,
+    "errors": [
+      "A p-value is the probability that the null hypothesis is true given the data you observed.",
+      "p = 0.04 means there is a 4% chance the null is correct and a 96% chance your effect is real.",
+      "That is why we reject the null below 0.05 - it means we are confident the alternative holds."
+    ]
+  },
+  "gemini-3.1-flash-lite::pvalue-correct": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.1-flash-lite::clt-mean-exists": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.75,
+    "n_errors": 2,
+    "errors": [
+      "The claim that 'Cauchy has a well-defined mean at its location parameter' is false.",
+      "The claim that 'convergence to a normal is merely very slow rather than absent' is false for the Cauchy distribution."
+    ]
+  },
+  "gemini-3.1-flash-lite::map-invariance": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "partial",
+    "score": 1.0,
+    "n_errors": 2,
+    "errors": [
+      "The candidate incorrectly claims that 'MAP has the advantage of being invariant to reparameterisation'. The MAP estimator is famously not invariant to non-linear reparameterisations because the mode of a probability density function changes under change of variables (due to the Jacobian determinant).",
+      "The candidate incorrectly claims 'the mode is a property of the distribution itself' as a justification for invariance; the mode is a property of the density, which is not invariant under transformation."
+    ]
+  },
+  "gemini-3.1-flash-lite::entropy-partial": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "partial",
+    "score": 0.5,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.5-flash-lite::kl-reference-is-wrong": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.1-flash-lite::kl-reference-is-wrong": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "correct",
+    "score": 1.0,
+    "n_errors": 0,
+    "errors": []
+  },
+  "gemini-3.5-flash-lite::kl-reference-and-rubric-wrong": {
+    "model_requested": "gemini-3.5-flash-lite",
+    "model_used": "gemini-3.5-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 2,
+    "errors": [
+      "Reverse KL, D(Q||P), is zero-forcing (mode-seeking); forward KL is mass-covering.",
+      "Variational inference minimises reverse KL, which is why a unimodal family collapses onto a single mode of a multimodal posterior."
+    ]
+  },
+  "gemini-3.1-flash-lite::kl-reference-and-rubric-wrong": {
+    "model_requested": "gemini-3.1-flash-lite",
+    "model_used": "gemini-3.1-flash-lite",
+    "verdict": "incorrect",
+    "score": 0.0,
+    "n_errors": 2,
+    "errors": [
+      "The candidate incorrectly swapped the definitions: 'Reverse KL, D(Q||P), is zero-forcing (mode-seeking); forward KL is mass-covering.'",
+      "The candidate incorrectly concluded: 'Variational inference minimises reverse KL, which is why a unimodal family collapses onto a single mode of a multimodal posterior' implying this is a feature rather than the specific mode-seeking bias of reverse KL."
+    ]
+  }
+}

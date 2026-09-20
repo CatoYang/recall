@@ -44,6 +44,26 @@ def cmd_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_eval(args: argparse.Namespace) -> int:
+    """Measure candidate grader models against planted-error fixtures."""
+    from .evaluate import load_fixtures, report, run
+
+    fixtures = load_fixtures()
+    flagged = sum(1 for f in fixtures if f.should_flag)
+    calls = len(args.models) * len(fixtures)
+    print(f"{len(fixtures)} fixtures ({flagged} with planted errors) "
+          f"x {len(args.models)} model(s) = up to {calls} calls, "
+          f"~{calls * 1250:,} tokens, ~{calls * args.delay / 60:.0f} min at "
+          f"{args.delay}s spacing")
+    print("cached per (fixture, model) - safe to interrupt and rerun\n")
+
+    for m in args.models:
+        print(f"{m}:")
+        results = run([m], backend=args.backend, delay=args.delay, force=args.force)
+    report(results, args.models, fixtures)
+    return 0
+
+
 def cmd_models(args: argparse.Namespace) -> int:
     """Verify credentials and list models the key can actually reach."""
     from .config import backend_name, get_key
@@ -104,6 +124,14 @@ def main(argv: list[str] | None = None) -> int:
     p_models = sub.add_parser("models", help="verify credentials, list reachable models")
     p_models.add_argument("--backend", choices=["anthropic", "gemini"], default=None)
     p_models.set_defaults(func=cmd_models)
+
+    p_eval = sub.add_parser("eval", help="measure grader models on planted errors")
+    p_eval.add_argument("models", nargs="+", help="model ids to compare")
+    p_eval.add_argument("--backend", choices=["anthropic", "gemini"], default=None)
+    p_eval.add_argument("--delay", type=float, default=4.0,
+                        help="seconds between calls (rate-limit pacing)")
+    p_eval.add_argument("--force", action="store_true", help="ignore cached results")
+    p_eval.set_defaults(func=cmd_eval)
 
     args = parser.parse_args(argv)
     if args.cmd is None:

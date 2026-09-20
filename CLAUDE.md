@@ -70,3 +70,32 @@ Tests never hit the network. `build_prompt` is tested directly for the two
 trust branches; the live `Grader.grade` call is the one untested path. When
 adding a question file, `test_shipped_question_bank_is_valid` will validate it
 automatically.
+
+## Grader capability tiers (measured, not assumed)
+
+`eval/fixtures.yaml::kl-reference-and-rubric-wrong` puts a *correct* candidate
+answer against a reference AND rubric that both carry an error. Results:
+
+| model | verdict | conflict flagged | safe for unverified |
+|---|---|---|---|
+| gemini-3.5-flash | correct | yes | **yes (confirmed)** |
+| gemini-3.5-flash-lite | **incorrect** | no | no |
+| gemini-3.1-flash-lite | **incorrect** | yes | no |
+
+flash-lite marks a *correct* answer wrong when the reference is wrong. In a
+real session that trains the misconception in - strictly worse than refusing.
+So `GeminiGrader.grade` **refuses** to grade an unverified question with a
+model outside `CONFLICT_CAPABLE`, and never falls back below that tier. Don't
+"fix" that by letting it degrade; the fallback chain crossing this line was a
+real bug caught by the eval.
+
+Corollary: verifying a question makes it *cheaper* to grade, because the cheap
+tier becomes safe for it.
+
+Two traps when measuring this:
+- Flipping provenance to `verified` to bypass the gate also switches the
+  prompt to the trusted branch ("treat the reference as authoritative"), so
+  models correctly defer and you measure nothing. Call `_call` directly.
+- `fallbacks=[]` must mean *no fallbacks*. It was being read as "unspecified,
+  use defaults" (falsy vs None), silently attributing results to the wrong
+  model. `used_model` exists to catch exactly this.

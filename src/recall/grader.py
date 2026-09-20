@@ -130,15 +130,47 @@ class AnthropicGrader:
         return response.parsed_output
 
 
-#: Tried in order when the primary model returns 503/429. Free-tier Flash and
-#: Pro are frequently congested or quota-capped; flash-lite is the reliable
-#: floor. Ordered most to least capable.
+#: Tried in order when the primary model returns 503/429, most to least
+#: capable. Free-tier Flash is frequently congested and Pro is excluded
+#: outright (limit: 0), so flash-lite is the availability floor.
 GEMINI_FALLBACKS = [
     "gemini-3.8-flash",
+    "gemini-3.7-flash",
     "gemini-3.5-flash",
     "gemini-3.5-flash-lite",
     "gemini-3.1-flash-lite",
 ]
+
+#: Models able to override a wrong reference and report a REFERENCE CONFLICT.
+#: Grading an *unverified* question requires this: the stored answer may be
+#: wrong, so the grader must supply its own knowledge rather than defer.
+#:
+#: Measured on eval/fixtures.yaml::kl-reference-and-rubric-wrong - reference
+#: AND rubric both carry the error, candidate answer is correct:
+#:
+#:   gemini-3.5-flash       verdict=correct,   conflict flagged   CONFIRMED
+#:   gemini-3.5-flash-lite  verdict=INCORRECT, no conflict        unsafe
+#:   gemini-3.1-flash-lite  verdict=INCORRECT, conflict flagged   unsafe
+#:                          (noticed the problem and failed you anyway)
+#:
+#: flash-lite marks a CORRECT answer wrong when the reference is wrong, which
+#: would train the misconception in - strictly worse than refusing to grade.
+#:
+#: 3.8/3.7/3.6-flash and the Pro tier are INFERRED from tier, not confirmed -
+#: they were 503/limit-0 during measurement. Re-run the fixture to confirm.
+CONFLICT_CAPABLE = frozenset({
+    "gemini-3.8-flash",       # inferred
+    "gemini-3.7-flash",       # inferred
+    "gemini-3.6-flash",       # inferred
+    "gemini-3.5-flash",       # CONFIRMED
+    "gemini-flash-latest",    # inferred (alias)
+    "gemini-3.1-pro-preview", # inferred (free tier: limit 0)
+    "gemini-pro-latest",      # inferred
+})
+
+
+class NoCapableModel(RuntimeError):
+    """No model able to grade an unverified question was reachable."""
 
 _TRANSIENT = ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "overloaded")
 
@@ -155,7 +187,10 @@ class GeminiGrader:
 
         self.model = model or GEMINI_MODEL
         self.used_model = self.model
-        self.fallbacks = [m for m in (fallbacks or GEMINI_FALLBACKS) if m != self.model]
+        # `is None` not falsy: fallbacks=[] means *no* fallbacks, which is not
+        # the same as 'unspecified, use defaults'.
+        chain = GEMINI_FALLBACKS if fallbacks is None else fallbacks
+        self.fallbacks = [m for m in chain if m != self.model]
         if client is None:
             key = get_key("GEMINI_API_KEY") or get_key("GOOGLE_API_KEY")
             if not key:
@@ -198,8 +233,24 @@ class GeminiGrader:
         import time
 
         prompt = build_prompt(question, answer)
+        chain = [self.model, *self.fallbacks]
+
+        # An unverified reference may itself be wrong, so the grader has to be
+        # able to overrule it. Degrading to a model that cannot do that would
+        # silently turn a safe grade into one that marks correct answers wrong
+        # - the worst outcome this tool can produce. Refuse instead.
+        if not question.provenance.trusted:
+            chain = [m for m in chain if m in CONFLICT_CAPABLE]
+            if not chain:
+                raise NoCapableModel(
+                    f"{self.model!r} is not rated to grade an unverified "
+                    "question: it cannot reliably overrule a wrong reference. "
+                    f"Use one of {sorted(CONFLICT_CAPABLE)}, or verify the "
+                    "question first."
+                )
+
         last: Exception | None = None
-        for model in [self.model, *self.fallbacks]:
+        for model in chain:
             for attempt in range(2):
                 try:
                     grade = self._call(model, prompt)
@@ -211,9 +262,13 @@ class GeminiGrader:
                         raise
                     if attempt == 0:
                         time.sleep(1.5)
+        tier = "" if question.provenance.trusted else (
+            " Only conflict-capable models are eligible here because the "
+            "question is unverified."
+        )
         raise RuntimeError(
-            f"every Gemini model was unavailable (last: {last}). "
-            "Free-tier Flash/Pro are often congested - try again shortly."
+            f"every eligible Gemini model was unavailable (last: {last})."
+            f"{tier} Free-tier Flash is often congested - try again shortly."
         ) from last
 
 

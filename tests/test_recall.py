@@ -203,13 +203,18 @@ class _FakeGemini:
         return type("R", (), {"parsed": make_grade("incorrect", (False, False))})()
 
 
+def _verified_q(qid="q1"):
+    return make_question(qid, TrustStatus.VERIFIED, "Murphy PML SS6.2")
+
+
 def test_gemini_falls_back_past_congested_models():
+    """Pure fallback mechanics, on a verified question (no capability gate)."""
     from recall.grader import GeminiGrader
 
     fake = _FakeGemini({"gemini-3.8-flash", "gemini-3.5-flash"})
     g = GeminiGrader(model="gemini-3.8-flash", client=fake,
                      fallbacks=["gemini-3.5-flash", "gemini-3.5-flash-lite"])
-    grade = g.grade(make_question(), "an answer")
+    grade = g.grade(_verified_q(), "an answer")
     assert grade.verdict == "incorrect"
     assert g.used_model == "gemini-3.5-flash-lite"   # what actually answered
     assert fake.tried.count("gemini-3.8-flash") == 2  # retried once before moving on
@@ -225,15 +230,52 @@ def test_gemini_does_not_retry_non_transient_errors():
             raise RuntimeError("400 INVALID_ARGUMENT: bad schema")
     boom = Boom(); boom.models = boom
 
-    g = GeminiGrader(model="m1", client=boom, fallbacks=["m2"])
+    g = GeminiGrader(model="gemini-3.8-flash", client=boom, fallbacks=[])
     with pytest.raises(RuntimeError, match="INVALID_ARGUMENT"):
-        g.grade(make_question(), "a")
+        g.grade(_verified_q(), "a")
 
 
 def test_all_models_exhausted_gives_actionable_error():
     from recall.grader import GeminiGrader
 
-    fake = _FakeGemini({"m1", "m2"})
-    g = GeminiGrader(model="m1", client=fake, fallbacks=["m2"])
+    fake = _FakeGemini({"gemini-3.8-flash", "gemini-3.5-flash"})
+    g = GeminiGrader(model="gemini-3.8-flash", client=fake,
+                     fallbacks=["gemini-3.5-flash"])
     with pytest.raises(RuntimeError, match="congested"):
+        g.grade(_verified_q(), "a")
+
+
+# ------------------------------------------- unverified needs a capable model
+
+def test_unverified_question_refuses_a_non_conflict_capable_model():
+    """Measured: flash-lite marks a CORRECT answer wrong when the reference is
+    wrong, and never reports the conflict. Grading an unverified question with
+    it would train the misconception in, so it must refuse rather than degrade.
+    See eval/fixtures.yaml::kl-reference-and-rubric-wrong."""
+    from recall.grader import GeminiGrader, NoCapableModel
+
+    fake = _FakeGemini(set())
+    g = GeminiGrader(model="gemini-3.5-flash-lite", client=fake, fallbacks=[])
+    with pytest.raises(NoCapableModel, match="unverified"):
+        g.grade(make_question(), "a")           # unverified by default
+    assert fake.tried == []                      # refused before spending a call
+
+
+def test_unverified_question_never_degrades_below_capable_tier():
+    from recall.grader import GeminiGrader
+
+    fake = _FakeGemini({"gemini-3.8-flash"})     # capable one is congested
+    g = GeminiGrader(model="gemini-3.8-flash", client=fake,
+                     fallbacks=["gemini-3.5-flash-lite"])
+    with pytest.raises(RuntimeError, match="unverified"):
         g.grade(make_question(), "a")
+    assert "gemini-3.5-flash-lite" not in fake.tried   # the whole point
+
+
+def test_verified_question_may_use_the_cheap_tier():
+    from recall.grader import GeminiGrader
+
+    fake = _FakeGemini(set())
+    g = GeminiGrader(model="gemini-3.5-flash-lite", client=fake, fallbacks=[])
+    assert g.grade(_verified_q(), "a").verdict == "incorrect"
+    assert fake.tried == ["gemini-3.5-flash-lite"]
