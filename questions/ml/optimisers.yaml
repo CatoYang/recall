@@ -1,0 +1,79 @@
+- id: ml-opt-adagrad-vs-rmsprop
+  topic: optimisers
+  difficulty: 2
+  prompt: |
+    What is the primary flaw in the AdaGrad optimiser, and how does RMSProp solve it?
+  answer: |
+    AdaGrad accumulates the sum of squared gradients in the denominator of the learning rate, which causes the effective learning rate to continuously shrink to zero over time, halting learning prematurely. RMSProp solves this by using an exponentially decaying average (a moving average) of squared gradients instead of a cumulative sum, preventing the learning rate from vanishing.
+  rubric:
+    - "AdaGrad accumulates the sum of squared gradients, causing the learning rate to vanish or shrink to zero"
+    - "RMSProp uses an exponentially decaying moving average of squared gradients instead"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md"
+  tags: [machine-learning, optimisers, gradient-descent]
+
+- id: ml-opt-adam-components
+  topic: optimisers
+  difficulty: 2
+  prompt: |
+    The Adam optimizer combines the core concepts of which two other optimization algorithms?
+  answer: |
+    Adam combines the advantages of Momentum (which computes an exponentially decaying average of past gradients, or the first moment) and RMSProp (which computes an exponentially decaying average of past squared gradients, or the second moment).
+  rubric:
+    - "Momentum (first moment or exponentially decaying average of past gradients)"
+    - "RMSProp (second moment or exponentially decaying average of squared gradients)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md"
+  tags: [machine-learning, optimisers, adam]
+
+- id: ml-opt-adam-vs-adamw
+  topic: optimisers
+  difficulty: 3
+  prompt: |
+    How does AdamW fundamentally differ from the standard Adam optimizer in its treatment of L2 regularization?
+  answer: |
+    Standard Adam couples weight decay (L2 regularization) with the gradient update step. AdamW decouples the weight decay from the gradient update, applying it directly to the weights. This decoupled approach generally leads to better generalization and makes hyperparameter tuning more stable.
+  rubric:
+    - "AdamW decouples weight decay (L2 regularization) from the gradient update"
+    - "AdamW applies weight decay directly to the weights"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md"
+  tags: [machine-learning, optimisers, regularisation]
+
+- id: ml-opt-adafactor-advantage
+  topic: optimisers
+  difficulty: 3
+  prompt: |
+    What is the primary advantage of the Adafactor optimizer over Adam, particularly when training Large Language Models (LLMs)?
+  answer: |
+    The primary advantage of Adafactor is its significantly reduced memory footprint. While Adam stores two full state variables (momentum and variance) for every parameter, Adafactor replaces the full variance matrix with a factored representation (row and column sums), which heavily saves memory during massive model training.
+  rubric:
+    - "Adafactor significantly reduces the memory footprint"
+    - "It does this by factoring the variance state matrix instead of storing full states for every parameter"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md"
+  tags: [machine-learning, optimisers, deep-learning]
+
+- id: ml-opt-momentum-purpose
+  topic: optimisers
+  difficulty: 2
+  prompt: |
+    How does Momentum optimization address the oscillation problem commonly seen in standard Stochastic Gradient Descent (SGD)?
+  answer: |
+    Momentum addresses oscillation in narrow ravines (steep surfaces) by accumulating an exponentially decaying moving average of past gradients. This mechanism dampens oscillations across steep directions and accelerates movement along consistent directions, leading to faster, more stable convergence.
+  rubric:
+    - "It accumulates an exponentially decaying moving average of past gradients"
+    - "It dampens oscillations and accelerates consistent directions"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Optimisers.md"
+  tags: [machine-learning, optimisers, gradient-descent]

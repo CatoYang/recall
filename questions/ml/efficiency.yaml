@@ -1,0 +1,48 @@
+- id: ml-eval-latency-percentiles
+  topic: efficiency
+  difficulty: 1
+  prompt: |
+    When evaluating the latency or inference speed of a machine learning model, what statistical measure is typically preferred over pure averages?
+  answer: |
+    Latency is typically evaluated using percentiles (such as p50, p95, or p99) rather than pure averages. This ensures that the tail-end or worst-case delays are captured, which is crucial for real-time systems.
+  rubric:
+    - "Percentiles (like p50, p95, p99) are used"
+    - "Preferred over pure averages"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md"
+  tags: [machine-learning, evaluation, efficiency]
+
+- id: ml-eval-flops-implication
+  topic: efficiency
+  difficulty: 1
+  prompt: |
+    In the context of model evaluation, what two physical operational constraints does a model's Computation Cost (measured in FLOPs) strongly dictate?
+  answer: |
+    The computation cost (the total theoretical operations required for a forward pass) dictates the model's **energy consumption** and its **hardware requirements**.
+  rubric:
+    - "Energy consumption"
+    - "Hardware requirements"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md"
+  tags: [machine-learning, evaluation, efficiency]
+
+- id: ml-eval-memory-optimization-techniques
+  topic: efficiency
+  difficulty: 1
+  prompt: |
+    What are three common optimization techniques used specifically to reduce a model's memory footprint (size) for deployment on edge devices?
+  answer: |
+    Three common techniques directly targeting memory reduction are quantization, pruning, and knowledge distillation.
+  rubric:
+    - "Quantization"
+    - "Pruning"
+    - "Knowledge distillation"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Efficiency_and_Resource_Management/07_Efficiency_and_Resource_Management.md"
+  tags: [machine-learning, evaluation, efficiency]

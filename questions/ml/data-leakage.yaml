@@ -1,0 +1,63 @@
+- id: ml-leakage-fundamental-axiom
+  topic: data-leakage
+  difficulty: 1
+  prompt: |
+    What is the fundamental axiom of pipeline design regarding the order of data splitting and preprocessing to prevent Train-Test Contamination?
+  answer: |
+    You must **split the data first**, and then apply preprocessing transformations strictly derived from (fit on) the training set alone.
+  rubric:
+    - "Split the data first"
+    - "Preprocess using parameters derived solely from the training set"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md"
+  tags: [machine-learning, mlops, data-leakage]
+
+- id: ml-leakage-stateful-vs-stateless
+  topic: data-leakage
+  difficulty: 2
+  prompt: |
+    In the context of preventing data leakage, how do "stateful" preprocessing operations differ from "stateless" operations?
+  answer: |
+    **Stateful** operations require calculating statistical parameters (like mean, variance, or eigenvectors) across multiple rows of the dataset, and thus must be fit only on the training set to prevent leakage. **Stateless** operations are independent mathematical transformations or fixed domain rules applied to single rows in isolation (e.g., log transforms, hardcoded capping), meaning they can be applied safely before splitting.
+  rubric:
+    - "Stateful operations calculate statistical parameters across multiple rows (must be fit on training data)"
+    - "Stateless operations are independent row-by-row transformations or fixed rules (safe to apply globally)"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md"
+  tags: [machine-learning, mlops, data-leakage, preprocessing]
+
+- id: ml-leakage-smote-risk
+  topic: data-leakage
+  difficulty: 2
+  prompt: |
+    Why is applying an oversampling technique like SMOTE to the entire dataset *before* splitting considered a critical data leakage risk?
+  answer: |
+    If SMOTE is applied globally before splitting, identical or highly similar synthetic interpolations will end up in both the Train and Test sets. This guarantees artificially perfect accuracy during evaluation, completely ruining the Test set's ability to measure generalization.
+  rubric:
+    - "Identical or highly similar synthetic examples will exist in both the Train and Test sets"
+    - "Results in artificially high accuracy or ruins the Test set's ability to measure true generalization"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md"
+  tags: [machine-learning, mlops, data-leakage]
+
+- id: ml-leakage-standard-scaling
+  topic: data-leakage
+  difficulty: 1
+  prompt: |
+    Why does applying Standard Scaling (Z-score normalization) to the entire dataset before splitting cause Train-Test Contamination?
+  answer: |
+    Standard scaling calculates the global mean and standard deviation across all rows. If applied globally, the training set data is shifted and scaled using statistical knowledge (the variance and mean) that includes the test set, allowing the training process to "peek" at the test distribution.
+  rubric:
+    - "Calculates the global mean and standard deviation"
+    - "The training set is scaled using knowledge/statistics of the test set (peeking at the test distribution)"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/03_Data_Leakage_and_Preprocessing.md"
+  tags: [machine-learning, mlops, data-leakage, preprocessing]

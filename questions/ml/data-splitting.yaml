@@ -1,0 +1,63 @@
+- id: ml-split-deep-learning-ratios
+  topic: data-splitting
+  difficulty: 2
+  prompt: |
+    Why do Deep Learning pipelines operating on massive datasets (millions of samples) often use data splitting ratios like 98% Train, 1% Validation, 1% Test, instead of the traditional 80/10/10 split?
+  answer: |
+    Deep learning models require massive amounts of data to converge their millions of parameters, so you want to maximize the training set size. Meanwhile, 1% of a massive dataset still represents tens of thousands of samples, which is statistically more than enough to reliably evaluate generalization and calculate metrics.
+  rubric:
+    - "Models require massive data to converge parameters (maximize training set)"
+    - "1% of a massive dataset is still a statistically significant or large enough sample for evaluation"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md"
+  tags: [machine-learning, mlops, data-splitting, deep-learning]
+
+- id: ml-split-time-series-shuffling
+  topic: data-splitting
+  difficulty: 1
+  prompt: |
+    Why is random shuffling explicitly prohibited when splitting time-series or sequential data into Train and Test sets?
+  answer: |
+    Random shuffling destroys the chronological order of the data. This introduces severe Train-Test Contamination (specifically, look-ahead bias), allowing the model to train on future information to predict past events, which is impossible in real-world deployment.
+  rubric:
+    - "Destroys chronological order"
+    - "Introduces Train-Test Contamination or look-ahead bias (using future data to predict the past)"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md"
+  tags: [machine-learning, mlops, time-series, data-splitting]
+
+- id: ml-split-group-k-fold
+  topic: data-splitting
+  difficulty: 2
+  prompt: |
+    Under what specific dataset condition must you use "Group $K$-Fold Cross Validation" instead of standard random $K$-Fold?
+  answer: |
+    You must use Group $K$-Fold when the dataset contains multiple records belonging to the same entity (e.g., multiple scans of the same patient). This ensures all records for a specific entity fall into the same fold, preventing the model from "leaking" or memorizing entity-specific traits across the train and validation splits.
+  rubric:
+    - "When the dataset contains multiple records belonging to the same entity/group"
+    - "Ensures all records for an entity are in the same fold to prevent leakage/memorization of entity traits"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md"
+  tags: [machine-learning, mlops, cross-validation, data-splitting]
+
+- id: ml-split-internal-vs-external
+  topic: data-splitting
+  difficulty: 2
+  prompt: |
+    In a robust MLOps pipeline, what is the fundamental difference in what "Internal Validation" versus "External Validation" evaluates?
+  answer: |
+    **Internal Validation** uses a sequestered Test Set derived from the primary dataset, measuring the model's ability to **interpolate** unseen samples from the exact same data-generating distribution. **External Validation** uses completely independent datasets (e.g., different geographies or time periods), measuring the model's **extrapolation** and robustness to out-of-distribution (OOD) domain shifts.
+  rubric:
+    - "Internal validation measures interpolation on the same data-generating distribution"
+    - "External validation measures extrapolation/robustness on completely independent or out-of-distribution datasets"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/02_Data_Splitting_and_Validation.md"
+  tags: [machine-learning, mlops, evaluation, data-splitting]

@@ -1,0 +1,67 @@
+- id: ml-bv-decomposition
+  topic: bias-variance
+  difficulty: 2
+  prompt: |
+    According to Statistical Learning Theory, into what three distinct mathematical components is the expected generalization error (e.g., Mean Squared Error) of a predictive model decomposed?
+  answer: |
+    The expected generalization error is decomposed into:
+    1. **Bias (squared):** The error introduced by the model's simplifying assumptions.
+    2. **Variance:** The error introduced by the model's sensitivity to small fluctuations in the training set.
+    3. **Irreducible Error:** The inherent noise in the problem itself, which cannot be reduced by any model.
+  rubric:
+    - "Bias (or Bias squared)"
+    - "Variance"
+    - "Irreducible Error (or inherent noise)"
+  provenance:
+    status: unverified
+    source: "vault note: 05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md."
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [machine-learning, statistical-learning-theory, bias-variance]
+
+- id: ml-bv-bias-definition
+  topic: bias-variance
+  difficulty: 1
+  prompt: |
+    In the context of the Bias-Variance tradeoff, what does "High Bias" signify about a learning algorithm, and what practical problem does it typically lead to?
+  answer: |
+    High bias signifies that the learning algorithm makes overly strong or erroneous simplifying assumptions about the real-world problem (e.g., assuming a linear relationship when the true relationship is non-linear). This lack of flexibility typically leads to **underfitting**.
+  rubric:
+    - "The model makes overly strong/erroneous simplifying assumptions"
+    - "Leads to underfitting"
+  provenance:
+    status: unverified
+    source: "vault note: 05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md."
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [machine-learning, statistical-learning-theory, bias-variance]
+
+- id: ml-bv-variance-definition
+  topic: bias-variance
+  difficulty: 1
+  prompt: |
+    In the context of the Bias-Variance tradeoff, what does "High Variance" signify about an estimated model, and what practical problem does it typically lead to?
+  answer: |
+    High variance signifies that the estimated model is overly sensitive to the specific, idiosyncratic noise in the training dataset (it would change significantly if trained on a different sample of data). This excessive flexibility typically leads to **overfitting**.
+  rubric:
+    - "The model is overly sensitive to noise in the specific training data"
+    - "Leads to overfitting"
+  provenance:
+    status: unverified
+    source: "vault note: 05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md."
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [machine-learning, statistical-learning-theory, bias-variance]
+
+- id: ml-bv-regularization-effect
+  topic: bias-variance
+  difficulty: 2
+  prompt: |
+    How do regularization techniques (like L1 Lasso or L2 Ridge) specifically manipulate the Bias-Variance tradeoff to achieve a lower expected generalization error?
+  answer: |
+    Regularization techniques penalize model complexity. By doing so, they intentionally inject **bias** into the estimator in exchange for a disproportionate reduction in **variance**, which ultimately lowers the overall expected generalization error on unseen data.
+  rubric:
+    - "Intentionally injects bias"
+    - "To achieve a disproportionate reduction in variance"
+  provenance:
+    status: unverified
+    source: "vault note: 05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md."
+    vault_ref: "05_Foundational_Machine_Learning/Statistical_Learning_Theory/Bias_Variance_Tradeoff.md"
+  tags: [machine-learning, statistical-learning-theory, bias-variance, regularization]

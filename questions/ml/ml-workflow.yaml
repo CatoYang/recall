@@ -1,0 +1,63 @@
+- id: ml-workflow-train-vs-validation
+  topic: ml-workflow
+  difficulty: 1
+  prompt: |
+    In a standard machine learning pipeline, what is the fundamental difference in purpose between the Training Set and the Validation Set?
+  answer: |
+    The **Training Set** is used exclusively for fitting the model's internal *parameters* (e.g., neural network weights, decision tree splits). The **Validation Set** is used for tuning the model's *hyperparameters* (e.g., learning rate, tree depth) and optimizing the decision threshold.
+  rubric:
+    - "Training set is used for fitting model parameters"
+    - "Validation set is used for tuning hyperparameters (or optimizing decision thresholds)"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md"
+  tags: [machine-learning, mlops, data-splitting]
+
+- id: ml-workflow-test-set-purpose
+  topic: ml-workflow
+  difficulty: 1
+  prompt: |
+    What is the strict mathematical purpose of the Test Set in a machine learning workflow, and how often should it be used?
+  answer: |
+    The Test Set is a sequestered dataset used to compute an unbiased estimate of the final model's generalization performance. To maintain its integrity and prevent information leakage, it must be used *only once* at the very end of the pipeline.
+  rubric:
+    - "Provides an unbiased estimate of the final model's performance/generalization"
+    - "Must be used only once at the very end of the pipeline"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md"
+  tags: [machine-learning, mlops, data-splitting]
+
+- id: ml-workflow-default-threshold
+  topic: ml-workflow
+  difficulty: 2
+  prompt: |
+    Why is the default decision threshold of 0.5 for classification models rarely mathematically optimal in practice?
+  answer: |
+    A default threshold of 0.5 assumes that the dataset is perfectly balanced and that the business costs of Type I Errors (False Positives) and Type II Errors (False Negatives) are exactly equal. In reality, datasets are often imbalanced and the cost of making a false positive is often drastically different from a false negative.
+  rubric:
+    - "Assumes the dataset is perfectly balanced"
+    - "Assumes the costs of False Positives and False Negatives are symmetrical/equal"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md"
+  tags: [machine-learning, mlops, evaluation]
+
+- id: ml-workflow-univariate-filtering
+  topic: ml-workflow
+  difficulty: 1
+  prompt: |
+    What is the purpose of performing univariate feature filtering before entering the main model training pipeline?
+  answer: |
+    Univariate feature filtering acts as a stateless pre-screening step to reduce dimensionality and computational overhead. It identifies and discards predictors that possess little to no direct statistical association with the target variable before model training even begins.
+  rubric:
+    - "Reduces dimensionality or computational overhead"
+    - "Screens out predictors with little to no association with the target variable"
+  provenance:
+    status: unverified
+    source: "vault note: 08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md."
+    vault_ref: "08_Pipeline_Design_and_MLOps/01_Machine_Learning_Workflow.md"
+  tags: [machine-learning, mlops, feature-selection]

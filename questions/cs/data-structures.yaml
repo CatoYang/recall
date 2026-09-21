@@ -1,0 +1,64 @@
+- id: cs-ds-vs-adt
+  topic: data-structures
+  difficulty: 2
+  prompt: |
+    What is the fundamental difference between a Data Structure and an Abstract Data Type (ADT)?
+  answer: |
+    A Data Structure defines how data is actually organized and stored in memory (the physical structural layout). An Abstract Data Type (ADT) defines only the expected behavior, operations, and interface, leaving the physical implementation details to a specific underlying data structure.
+  rubric:
+    - States that data structures dictate physical memory layout or organization
+    - States that ADTs define behavior, operations, or interfaces without dictating implementation
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md"
+  tags: [data-structures, adt, concepts]
+
+- id: cs-ds-pointer-vs-reference
+  topic: data-structures
+  difficulty: 2
+  prompt: |
+    In computer science, what are the key differences between a pointer and a reference?
+  answer: |
+    Both store memory addresses, but a pointer is a distinct variable that holds a raw memory address and typically supports pointer arithmetic. A reference acts as an alias to an existing variable, cannot be reassigned to point to something else once initialized (in many languages like C++), and does not support memory arithmetic.
+  rubric:
+    - Identifies a pointer as holding raw memory addresses and supporting arithmetic
+    - Identifies a reference as an alias that cannot be reassigned or perform arithmetic
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md"
+  tags: [data-structures, memory, pointers]
+
+- id: cs-ds-array-vs-linked-list
+  topic: data-structures
+  difficulty: 2
+  prompt: |
+    Compare the time complexity of element access and middle-insertion for dynamic arrays versus linked lists.
+  answer: |
+    Dynamic arrays provide O(1) time complexity for access/indexing but O(n) for insertion in the middle, because subsequent elements must be shifted. Linked lists have O(n) complexity for access (requiring traversal from the head) but O(1) complexity for insertion if the target node location is already known.
+  rubric:
+    - "Array: O(1) access, O(n) middle insertion due to shifting"
+    - "Linked List: O(n) access, O(1) insertion if the target node is known"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md"
+  tags: [data-structures, arrays, linked-lists, complexity]
+
+- id: cs-ds-dynamic-array-amortized
+  topic: data-structures
+  difficulty: 2
+  prompt: |
+    Why is insertion at the end of a dynamic array considered O(1) *amortized*?
+  answer: |
+    Most insertions at the end of a dynamic array take O(1) time. However, when the array reaches its current capacity limit, it must allocate a new, larger block of memory and copy all existing elements over, which takes O(n) time. Because this expensive resize operation happens infrequently (usually doubling capacity), averaging the cost over a sequence of insertions results in a constant O(1) cost per operation.
+  rubric:
+    - Explains that most insertions are simple O(1) operations
+    - Mentions that hitting capacity triggers an O(n) resize and copy operation
+    - Notes that averaging the costly resize over many fast insertions yields an O(1) amortized cost
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Data Structures/Primitive_and_Linear_Structures_Consolidated.md"
+  tags: [data-structures, arrays, amortized-analysis]

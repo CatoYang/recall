@@ -1,0 +1,66 @@
+- id: stats-dist-confidence-interval
+  topic: distributions-sampling
+  difficulty: 1
+  prompt: |
+    What is the strict statistical interpretation of a "95% Confidence Interval" (CI) for a population parameter?
+  answer: |
+    A 95% CI means that if you were to repeat the exact same experiment or sampling process many times and calculate a new confidence interval each time, approximately 95% of those generated intervals would contain the true, fixed population parameter. It does *not* mean there is a 95% probability that the parameter lies within your one specific interval.
+  rubric:
+    - "If the experiment/sampling was repeated many times"
+    - "95% of those generated intervals would contain the true population parameter"
+    - "It does NOT mean there is a 95% probability the parameter is in one specific interval"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [statistics, sampling, confidence-intervals]
+
+- id: stats-dist-sampling-vs-resampling
+  topic: distributions-sampling
+  difficulty: 1
+  prompt: |
+    In the context of data collection and model validation, what is the fundamental difference between "Random Sampling" and "Resampling"?
+  answer: |
+    - **Random Sampling:** Drawing a subset of individuals directly from the *underlying population* to create a representative sample.
+    - **Resampling:** Drawing repeated subsets from an *already collected sample* (pseudo-samples) to measure uncertainty, validate models, or approximate sampling variability (e.g., Bootstrapping, Cross-Validation).
+  rubric:
+    - "Random sampling draws from the underlying population"
+    - "Resampling draws from an already collected sample"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [statistics, sampling, resampling]
+
+- id: stats-dist-survivorship-bias
+  topic: distributions-sampling
+  difficulty: 1
+  prompt: |
+    What is "Survivorship Bias" and why is it a critical risk when building predictive models?
+  answer: |
+    Survivorship Bias is a form of selection bias where the sample only includes individuals or data points that "survived" a process, while all failures or dropouts are ignored. It is a critical risk because training a model only on "successes" completely distorts the data distribution, leading to wildly optimistic and incorrect predictions (e.g., studying only profitable companies and ignoring bankrupt ones).
+  rubric:
+    - "The sample only includes data points that survived a process"
+    - "Failures or dropouts are ignored/excluded"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [statistics, sampling, bias]
+
+- id: stats-dist-gclt-variance
+  topic: distributions-sampling
+  difficulty: 2
+  prompt: |
+    What is the fundamental difference regarding the *variance requirement* of the data between the Classical Central Limit Theorem (CLT) and the Generalized Central Limit Theorem (GCLT)?
+  answer: |
+    The Classical CLT strictly requires the data to have a **finite variance**, resulting in sums converging to a Normal (Gaussian) distribution. The Generalized CLT removes this requirement, allowing for **infinite variance** (heavy-tailed data), where sums converge instead to the broader class of Lévy Stable Distributions.
+  rubric:
+    - "Classical CLT requires finite variance"
+    - "Generalized CLT allows for infinite variance"
+    - "GCLT converges to Stable Distributions (or Lévy Stable distributions)"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Distributions_and_Sampling.md"
+  tags: [statistics, distributions, central-limit-theorem]

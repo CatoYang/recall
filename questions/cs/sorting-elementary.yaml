@@ -1,0 +1,63 @@
+- id: sort-elem-bubble-mechanism
+  topic: sorting-elementary
+  difficulty: 1
+  prompt: |
+    Briefly describe the mechanism of Bubble Sort and state its worst-case time complexity.
+  answer: |
+    Bubble sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. This causes the largest elements to "bubble" to the end. Its worst-case time complexity is $O(n^2)$.
+  rubric:
+    - "Compares adjacent elements and swaps them if they are in the wrong order"
+    - "Worst-case time complexity is O(n^2)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-elem-selection-swaps
+  topic: sorting-elementary
+  difficulty: 2
+  prompt: |
+    Why might Selection Sort be preferred over other $O(n^2)$ sorting algorithms in embedded systems with costly memory write operations?
+  answer: |
+    Selection Sort performs exactly $O(n)$ swaps in all cases, minimizing the number of memory write operations compared to other algorithms (like Bubble or Insertion sort) which may perform $O(n^2)$ writes.
+  rubric:
+    - "Performs exactly O(n) swaps (or minimizes memory writes)"
+    - "Better for systems where writing to memory is highly expensive"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-elem-selection-stability
+  topic: sorting-elementary
+  difficulty: 2
+  prompt: |
+    Is Selection Sort generally considered a stable sorting algorithm? Briefly explain why or why not.
+  answer: |
+    No, Selection Sort is generally unstable. This is because swapping the minimum element found in the unsorted region across long distances can easily jump over and disrupt the relative order of other equal elements.
+  rubric:
+    - "No (unstable)"
+    - "Swapping elements across long distances disrupts the relative order of equal elements"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-elem-insertion-adaptivity
+  topic: sorting-elementary
+  difficulty: 2
+  prompt: |
+    What is the best-case time complexity of Insertion Sort, and under what specific condition does it occur?
+  answer: |
+    The best-case time complexity is $O(n)$. This occurs when the input array is already perfectly sorted, as the algorithm only needs to make one comparison per element to verify it is in the correct position without shifting anything.
+  rubric:
+    - "O(n) (or linear time)"
+    - "Occurs when the array is already sorted"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/02_Elementary_Sorts.md"
+  tags: [computer-science, algorithms, sorting]

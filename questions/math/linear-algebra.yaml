@@ -1,0 +1,81 @@
+- id: math-la-l1-vs-l2-norm
+  topic: linear-algebra
+  difficulty: 1
+  prompt: |
+    Define the $L_1$ (Manhattan) and $L_2$ (Euclidean) norms for a vector $\mathbf{v} \in \mathbb{R}^n$.
+  answer: |
+    The $L_1$ norm (Manhattan norm) is the sum of the absolute values of the vector's components: $||\mathbf{v}||_1 = \sum_{i=1}^n |v_i|$.
+    The $L_2$ norm (Euclidean norm) is the square root of the sum of the squared components: $||\mathbf{v}||_2 = \sqrt{\sum_{i=1}^n v_i^2}$.
+  rubric:
+    - "$L_1$ norm is the sum of absolute values of components"
+    - "$L_2$ norm is the square root of the sum of squared components"
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md."
+    vault_ref: "00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md"
+  tags: [linear-algebra, vectors, math]
+
+- id: math-la-dot-product-definition
+  topic: linear-algebra
+  difficulty: 1
+  prompt: |
+    What is the mathematical definition of the inner product (dot product) of two vectors $\mathbf{u}, \mathbf{v} \in \mathbb{R}^n$?
+  answer: |
+    The inner product (or dot product) of two vectors $\mathbf{u}$ and $\mathbf{v}$ in $\mathbb{R}^n$ is the scalar sum of their component-wise products. Mathematically, it is defined as $\mathbf{u}^T \mathbf{v} = \sum_{i=1}^n u_i v_i$.
+  rubric:
+    - "Defined as the sum of component-wise products"
+    - "Yields a scalar result (not a vector)"
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md."
+    vault_ref: "00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md"
+  tags: [linear-algebra, vectors, math]
+
+- id: math-la-matrix-multiplication-commutativity
+  topic: linear-algebra
+  difficulty: 1
+  prompt: |
+    Is matrix multiplication commutative? State the general rule and provide the mathematical notation.
+  answer: |
+    No, matrix multiplication is generally non-commutative. For two matrices $A$ and $B$, the product $AB$ is generally not equal to $BA$ (i.e., $AB \neq BA$), and one of the products might not even be defined depending on their dimensions.
+  rubric:
+    - "States that matrix multiplication is non-commutative"
+    - "Mentions that AB is not generally equal to BA"
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md."
+    vault_ref: "00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md"
+  tags: [linear-algebra, matrices, math]
+
+- id: math-la-eigenvector-eigenvalue-definition
+  topic: linear-algebra
+  difficulty: 2
+  prompt: |
+    What is the defining mathematical relationship for an eigenvector $\mathbf{v}$ and its corresponding eigenvalue $\lambda$ of a square matrix $A$?
+  answer: |
+    An eigenvector $\mathbf{v}$ (which must be a non-zero vector) and its eigenvalue $\lambda$ satisfy the equation $A\mathbf{v} = \lambda\mathbf{v}$. This means that applying the linear transformation $A$ to the vector $\mathbf{v}$ only scales the vector by the factor $\lambda$, without changing its direction.
+  rubric:
+    - "Provides the equation A*v = lambda*v"
+    - "Specifies that the eigenvector must be non-zero"
+    - "Explains conceptually that the transformation only scales the vector"
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md."
+    vault_ref: "00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md"
+  tags: [linear-algebra, eigenvalues, matrices]
+
+- id: math-la-covariance-matrix-properties
+  topic: linear-algebra
+  difficulty: 2
+  prompt: |
+    What are two key mathematical properties of a covariance matrix?
+  answer: |
+    A covariance matrix is always symmetric (it equals its transpose, $A = A^T$) and it is positive semi-definite.
+  rubric:
+    - "Symmetric (or equals its transpose)"
+    - "Positive semi-definite"
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md."
+    vault_ref: "00_Foundations_Mathematics/Linear_Algebra/Vectors_and_Matrices.md"
+  tags: [linear-algebra, covariance, matrices]

@@ -1,0 +1,47 @@
+- id: ml-tree-split-gini-impurity
+  topic: tree-splitting
+  difficulty: 2
+  prompt: |
+    Why is Gini Impurity computationally faster to calculate than Information Gain (Entropy) when building decision trees?
+  answer: |
+    Gini Impurity is computationally faster because it only requires basic arithmetic and calculating squares (using $\sum p_i^2$), whereas calculating Entropy requires computing logarithms ($- \sum p_i \log_2(p_i)$), which is a much more computationally expensive operation.
+  rubric:
+    - "Gini only requires calculating squares or basic arithmetic"
+    - "Entropy requires computing logarithms, which is computationally heavier"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md"
+  tags: [machine-learning, decision-trees, mathematics]
+
+- id: ml-tree-split-histogram-binning
+  topic: tree-splitting
+  difficulty: 2
+  prompt: |
+    How does Histogram-Based Splitting drastically reduce the time complexity of finding the optimal split for continuous features in gradient boosting?
+  answer: |
+    Instead of sorting continuous features and evaluating a potential split at every single unique data point (which takes $O(N \log N)$ time), the features are binned into discrete buckets (e.g., 256 bins) prior to training. Splits are then evaluated only on the bin boundaries, reducing the split-finding complexity to $O(N)$ and allowing for highly efficient hardware caching.
+  rubric:
+    - "Bins continuous features into discrete buckets"
+    - "Evaluates splits only on the bin boundaries (reducing complexity to O(N))"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md"
+  tags: [machine-learning, gradient-boosting, optimization]
+
+- id: ml-tree-split-oblique
+  topic: tree-splitting
+  difficulty: 2
+  prompt: |
+    What is the difference between standard axis-aligned tree splits and oblique splits?
+  answer: |
+    Standard axis-aligned splits evaluate a single feature against a threshold (e.g., $x_1 > 5$), creating boundaries parallel to the feature axes. Oblique splits evaluate a linear combination of multiple features simultaneously (e.g., $2x_1 - 3x_2 > 5$), creating diagonal or sloped boundaries that can capture linear relationships in fewer splits, though at the cost of interpretability and search computation.
+  rubric:
+    - "Axis-aligned splits use a single feature"
+    - "Oblique splits use a linear combination of multiple features"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Splitting_and_Strategies.md"
+  tags: [machine-learning, decision-trees, algorithms]

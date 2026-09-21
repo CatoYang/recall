@@ -1,0 +1,75 @@
+- id: gradient-geometric-interpretation
+  topic: multivariable-calculus
+  difficulty: 1
+  prompt: |
+    What is the geometric interpretation of the gradient vector $\nabla f(\mathbf{x})$ of a multivariable function, and how is it used in Gradient Descent?
+  answer: |
+    The gradient vector $\nabla f(\mathbf{x})$ points in the direction of the **steepest ascent** of the function at the point $\mathbf{x}$. 
+
+    In Gradient Descent, to minimize a loss function, we move in the direction of the negative gradient ($-\nabla f(\mathbf{x})$), which points in the direction of the **steepest descent**.
+  rubric:
+    - States that the gradient points in the direction of steepest ascent
+    - States that Gradient Descent moves in the direction of the negative gradient (steepest descent)
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md."
+    vault_ref: "00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md"
+  tags: [gradient, optimization, calculus]
+
+- id: hessian-matrix-definition
+  topic: multivariable-calculus
+  difficulty: 1
+  prompt: |
+    Define the Hessian matrix of a scalar-valued function $f$. Under what condition is the Hessian guaranteed to be a symmetric matrix?
+  answer: |
+    The **Hessian matrix** is a square matrix composed of all the **second-order partial derivatives** of the function $f$.
+
+    The Hessian is guaranteed to be a symmetric matrix ($H = H^T$) if the second partial derivatives are continuous, due to Schwarz's theorem (or Clairaut's theorem), which states that the mixed partial derivatives are equal ($\frac{\partial^2 f}{\partial x_i \partial x_j} = \frac{\partial^2 f}{\partial x_j \partial x_i}$).
+  rubric:
+    - Defines the Hessian as the matrix of second-order partial derivatives
+    - States that it is symmetric if the second partial derivatives are continuous
+    - Mentions Schwarz's theorem / Clairaut's theorem (or equality of mixed partials)
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md."
+    vault_ref: "00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md"
+  tags: [hessian, calculus, matrices]
+
+- id: hessian-critical-points
+  topic: multivariable-calculus
+  difficulty: 2
+  prompt: |
+    Given a critical point where the gradient $\nabla f(\mathbf{x}) = \mathbf{0}$, explain how the properties of the Hessian matrix classify the critical point as a local minimum, local maximum, or saddle point.
+  answer: |
+    - **Local Minimum**: The Hessian is **positive definite** (all eigenvalues > 0).
+    - **Local Maximum**: The Hessian is **negative definite** (all eigenvalues < 0).
+    - **Saddle Point**: The Hessian has both positive and negative eigenvalues (indefinite).
+  rubric:
+    - Associates local minimum with a positive definite Hessian (or all positive eigenvalues)
+    - Associates local maximum with a negative definite Hessian (or all negative eigenvalues)
+    - Associates saddle point with a Hessian having mixed (positive and negative) eigenvalues
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md."
+    vault_ref: "00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md"
+  tags: [hessian, optimization, critical-points]
+
+- id: newtons-method-complexity
+  topic: multivariable-calculus
+  difficulty: 2
+  prompt: |
+    State the update rule for Newton's method in optimization. Why is it often impractical for training large machine learning models?
+  answer: |
+    The update rule for Newton's method is:
+    $\mathbf{x}_{t+1} = \mathbf{x}_t - H^{-1} \nabla f(\mathbf{x}_t)$
+
+    It is often impractical for large ML models because it requires computing and inverting the full Hessian matrix. For an $n \times n$ matrix (where $n$ is the number of parameters), inversion scales with a computational complexity of $O(n^3)$, making it computationally prohibitive for models with millions or billions of parameters.
+  rubric:
+    - States the update rule containing the inverse Hessian multiplied by the gradient
+    - Explains that computing and inverting the Hessian is computationally expensive
+    - Mentions the O(n^3) complexity of matrix inversion
+  provenance:
+    status: unverified
+    source: "vault note: 00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md."
+    vault_ref: "00_Foundations_Mathematics/Multivariable_Calculus/Gradients_and_Hessians.md"
+  tags: [newtons-method, optimization, complexity]

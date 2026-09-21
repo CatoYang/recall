@@ -1,0 +1,68 @@
+- id: sort-dc-merge-mechanism
+  topic: sorting-divide-conquer
+  difficulty: 1
+  prompt: |
+    Briefly describe the divide and conquer mechanism of Merge Sort and state its time and space complexity.
+  answer: |
+    Merge sort recursively divides an array in half until it reaches sub-arrays of size 1. It then repeatedly merges those sorted sub-arrays back together in the correct order. 
+    Time complexity: $O(n \log n)$. 
+    Space complexity: $O(n)$ (out-of-place).
+  rubric:
+    - "Recursively divides array in half"
+    - "Merges sorted sub-arrays back together"
+    - "Time complexity: O(n log n)"
+    - "Space complexity: O(n)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-dc-merge-linked-lists
+  topic: sorting-divide-conquer
+  difficulty: 2
+  prompt: |
+    Why is Merge Sort uniquely well-suited for sorting Linked Lists compared to its performance on contiguous arrays?
+  answer: |
+    While Merge Sort requires $O(n)$ auxiliary space to sort contiguous arrays (for the temporary arrays during the merge step), it can sort Linked Lists in-place with $O(1)$ extra space because pointers can simply be rearranged during the merge step.
+  rubric:
+    - "Can sort Linked Lists in-place (O(1) extra space)"
+    - "Pointers can be rearranged directly during the merge step"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-dc-quick-worst-case
+  topic: sorting-divide-conquer
+  difficulty: 2
+  prompt: |
+    What is the worst-case time complexity of Quick Sort, and under what specific condition does this catastrophic degradation occur?
+  answer: |
+    The worst-case time complexity is $O(n^2)$. This occurs when poor pivots are chosen (e.g., always picking the first or last element) on an array that is already sorted or reverse-sorted. This causes the array to be partitioned into highly unbalanced sizes of $1$ and $n-1$, degrading the recursion tree depth from $O(\log n)$ to $O(n)$.
+  rubric:
+    - "Worst-case is O(n^2)"
+    - "Occurs when poor pivots are chosen on an already sorted or reverse-sorted array"
+    - "Causes unbalanced partitions (or degrades recursion depth to O(n))"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-dc-quick-vs-merge
+  topic: sorting-divide-conquer
+  difficulty: 2
+  prompt: |
+    Despite the risk of an $O(n^2)$ worst-case, why is Quick Sort often heavily preferred in practice over Merge Sort for contiguous arrays?
+  answer: |
+    Quick Sort is often preferred because it operates **in-place** (requiring no $O(n)$ memory allocation) and has extremely good **cache locality** (the CPU cache easily predicts and loads the sequential memory access during partitioning), leading to much smaller constant factors in its execution time.
+  rubric:
+    - "Operates in-place (no O(n) memory allocation)"
+    - "Extremely good cache locality (or sequential memory access)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/03_Divide_and_Conquer_Sorts.md"
+  tags: [computer-science, algorithms, sorting]

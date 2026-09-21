@@ -1,0 +1,71 @@
+- id: permutation-importance-mechanism
+  topic: xai
+  difficulty: 1
+  prompt: |
+    Explain the mechanism of Permutation Importance for measuring global feature importance.
+  answer: |
+    Permutation Importance is a model-agnostic technique that measures how much a model's performance metric (e.g., Accuracy, $R^2$) degrades when a single feature's values are randomly shuffled. 
+    
+    By shuffling the feature, its relationship with the target is destroyed. If the feature was important, the model's performance will drop significantly; if the feature was ignored, performance will remain largely unchanged.
+  rubric:
+    - States that a single feature's values are randomly shuffled
+    - Explains that the importance is measured by the resulting degradation in a performance metric
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md"
+  tags: [permutation-importance, xai, feature-importance]
+
+- id: lime-local-explanation
+  topic: xai
+  difficulty: 1
+  prompt: |
+    Describe how LIME (Local Interpretable Model-agnostic Explanations) generates an explanation for a single prediction made by a black-box model.
+  answer: |
+    LIME explains a specific prediction by generating locally perturbed samples around the instance of interest and passing them through the black-box model to get predictions. 
+    
+    It then trains a sparse, inherently interpretable surrogate model (such as a linear regression model) on these perturbed samples, weighting them by their proximity to the original instance. The weights of the surrogate model then serve as the local explanation.
+  rubric:
+    - Explains that it generates locally perturbed samples around the specific instance
+    - Explains that it trains a sparse/interpretable surrogate model on these perturbed samples
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md"
+  tags: [lime, xai, local-explanation]
+
+- id: shap-mechanism
+  topic: xai
+  difficulty: 2
+  prompt: |
+    What mathematical framework does SHAP (SHapley Additive exPlanations) use, and what does it compute for each feature?
+  answer: |
+    SHAP uses a **game-theoretic** approach (based on Shapley values). 
+
+    It computes the **marginal contribution** of each feature towards the final prediction across all possible feature permutations (coalitions) of the input. This guarantees mathematical consistency and provides an exact, additive local attribution for every prediction.
+  rubric:
+    - Identifies the framework as game-theoretic (or based on Shapley values)
+    - States that it computes the marginal contribution of each feature across all possible permutations/coalitions
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md"
+  tags: [shap, shapley-values, xai]
+
+- id: pdp-limitation
+  topic: xai
+  difficulty: 2
+  prompt: |
+    What is the main assumption made by Partial Dependence Plots (PDP) when visualizing the marginal effect of a feature, and why can violating this assumption be problematic?
+  answer: |
+    PDPs assume **feature independence**. They visualize the marginal effect of one or two features by averaging out the influence of all other variables.
+
+    When this assumption is violated (i.e., there is high collinearity or correlation between features), the PDP will average over synthetic, unrealistic combinations of features (e.g., a data point with height=200cm but weight=40kg) that don't occur in the real distribution, rendering the resulting plot misleading.
+  rubric:
+    - States that PDPs assume feature independence
+    - Explains that high collinearity leads to averaging over unrealistic/synthetic feature combinations, making interpretations misleading
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Interpretability_and_XAI/05_Interpretability_and_Explainability.md"
+  tags: [pdp, xai, feature-independence, collinearity]

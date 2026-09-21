@@ -1,0 +1,63 @@
+- id: sort-nc-linear-condition
+  topic: sorting-non-comparison
+  difficulty: 2
+  prompt: |
+    Under what specific condition is it mathematically possible to bypass the $\Omega(n \log n)$ theoretical lower bound and sort data in $O(n)$ linear time?
+  answer: |
+    It is possible to achieve $O(n)$ linear time if you have prior knowledge about the data (e.g., knowing all elements are integers within a specific, restricted range). This allows the algorithm to bypass element-to-element comparisons entirely and use the values themselves as array indices.
+  rubric:
+    - "If you have prior knowledge about the data (e.g., restricted integer range)"
+    - "Bypasses element-to-element comparisons"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-nc-counting-sort-memory
+  topic: sorting-non-comparison
+  difficulty: 2
+  prompt: |
+    What is the primary architectural limitation or "catch" of Counting Sort that restricts its real-world use?
+  answer: |
+    Counting Sort's memory requirement scales with the *maximum value* in the array, not just the number of elements. Sorting a tiny array containing one massive value (e.g., 1,000,000) will force the algorithm to allocate a massive counting array, causing extreme memory inefficiency if the range of values ($k$) is much larger than the number of elements ($n$).
+  rubric:
+    - "Memory scales with the maximum value (or range of values)"
+    - "Can cause massive memory allocation even for tiny input arrays if values are large"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-nc-radix-sort-mechanics
+  topic: sorting-non-comparison
+  difficulty: 2
+  prompt: |
+    Briefly describe the mechanism of Radix Sort (LSD) and why it relies on a stable sorting subroutine.
+  answer: |
+    Radix Sort sorts large integers digit by digit, usually starting from the least significant digit (LSD) up to the most. It strictly requires a stable sorting subroutine (like Counting Sort) so that when sorting higher-order digits, the relative order of numbers established by the lower-order digits is preserved.
+  rubric:
+    - "Sorts integers digit by digit"
+    - "Requires a stable subroutine to preserve the relative order established by previously sorted digits"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-nc-bucket-sort-distribution
+  topic: sorting-non-comparison
+  difficulty: 2
+  prompt: |
+    For Bucket Sort to achieve its average-case time complexity of $O(n + k)$, what specific property should the input data possess?
+  answer: |
+    The input data must be uniformly distributed over a known range. If the data is uniformly distributed, elements scatter evenly across the buckets, preventing any single bucket from becoming overloaded and degrading performance to the $O(n^2)$ worst case.
+  rubric:
+    - "Data should be uniformly distributed"
+    - "Prevents elements from clustering into a single bucket (which causes O(n^2) degradation)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/05_Non_Comparison_Sorts.md"
+  tags: [computer-science, algorithms, sorting]

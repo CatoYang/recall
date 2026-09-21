@@ -1,0 +1,79 @@
+- id: precision-vs-recall
+  topic: classification-metrics
+  difficulty: 1
+  prompt: |
+    Define Precision and Recall in the context of binary classification, and state when each is the more crucial metric to optimize.
+  answer: |
+    **Precision** (Positive Predictive Value) is the proportion of positive predictions that are actually positive: $TP / (TP + FP)$. It is crucial when **False Positives** are costly (e.g., spam filtering, where we don't want to classify normal emails as spam).
+
+    **Recall** (Sensitivity, True Positive Rate) is the proportion of actual positive instances that the model correctly identified: $TP / (TP + FN)$. It is crucial when **False Negatives** are costly (e.g., cancer detection, where missing a positive case is dangerous).
+  rubric:
+    - Defines Precision as TP / (TP + FP)
+    - States Precision is crucial when False Positives (Type I errors) are costly
+    - Defines Recall as TP / (TP + FN)
+    - States Recall is crucial when False Negatives (Type II errors) are costly
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md"
+  tags: [precision, recall, classification, metrics]
+
+- id: f-beta-score
+  topic: classification-metrics
+  difficulty: 2
+  prompt: |
+    What does the F-beta ($F_\beta$) score measure, and how do the values $\beta=1$ and $\beta=2$ change its behavior?
+  answer: |
+    The $F_\beta$ score is the weighted harmonic mean of Precision and Recall.
+
+    - **F1 Score ($\beta=1$)**: Gives equal weight to precision and recall. It is best used when False Positives and False Negatives carry similar consequences.
+    - **F2 Score ($\beta=2$)**: Weights Recall twice as heavily as Precision. It is used when identifying all positive instances (avoiding False Negatives) is more important than avoiding false alarms.
+  rubric:
+    - States that F-beta is the weighted harmonic mean of Precision and Recall
+    - Explains that F1 (beta=1) gives equal weight to precision and recall
+    - Explains that F2 (beta=2) gives more weight to recall than precision
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md"
+  tags: [f1-score, f-beta, classification]
+
+- id: macro-vs-micro-averaging
+  topic: classification-metrics
+  difficulty: 2
+  prompt: |
+    Explain the difference between **Macro-Averaging** and **Micro-Averaging** when aggregating classification metrics across multiple classes.
+  answer: |
+    - **Macro-Averaging** calculates metrics for each class independently, then takes the unweighted arithmetic mean. It treats all classes equally, which means it emphasizes performance on minority classes.
+    - **Micro-Averaging** aggregates all raw True Positive, False Positive, and False Negative counts globally across all classes before calculating the metric. In single-label multiclass settings, Micro-F1 is mathematically identical to overall Accuracy.
+  rubric:
+    - States that Macro-Averaging calculates metrics per class and takes the unweighted mean
+    - Mentions Macro-Averaging treats all classes equally (emphasizing minority classes)
+    - States that Micro-Averaging aggregates raw counts globally before computing the metric
+    - Mentions Micro-F1 is identical to overall Accuracy in single-label settings
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md"
+  tags: [macro-averaging, micro-averaging, multiclass]
+
+- id: auc-roc-vs-auc-pr
+  topic: classification-metrics
+  difficulty: 2
+  prompt: |
+    When evaluating a binary classifier on a highly imbalanced dataset where negative instances are overwhelmingly abundant, which metric is preferred: AUC-ROC or AUC-PR? Explain why.
+  answer: |
+    **AUC-PR** (Area Under the Precision-Recall Curve) is strongly preferred for highly imbalanced datasets.
+    
+    This is because AUC-ROC plots True Positive Rate against False Positive Rate. The False Positive Rate ($FP / (FP + TN)$) incorporates True Negatives, which can artificially inflate the score if the negative class is overwhelmingly abundant.
+    
+    AUC-PR plots Precision against Recall, completely ignoring True Negatives and focusing exclusively on the model's performance on the rare positive class.
+  rubric:
+    - Identifies AUC-PR (Area Under the Precision-Recall Curve) as the preferred metric
+    - Explains that AUC-ROC incorporates True Negatives (via False Positive Rate), which inflates the score on imbalanced data
+    - Explains that AUC-PR ignores True Negatives and focuses entirely on the positive class
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/01_Classification_Metrics.md"
+  tags: [auc-roc, auc-pr, imbalanced-data]

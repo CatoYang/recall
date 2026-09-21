@@ -1,0 +1,64 @@
+- id: ml-grad-vanishing-sigmoid-mechanism
+  topic: gradients
+  difficulty: 2
+  prompt: |
+    How do saturating activation functions like Sigmoid or Tanh contribute to the vanishing gradient problem in deep neural networks?
+  answer: |
+    Saturating activation functions squish large input values into very small output ranges, flattening out at the extremes. In these saturated regions, the derivative of the activation function is extremely close to zero. During backpropagation, multiplying these near-zero derivatives across many layers causes the gradient to decay exponentially, effectively vanishing before it reaches the early layers.
+  rubric:
+    - "Saturating functions have derivatives very close to zero at their extremes"
+    - "Multiplying these near-zero derivatives across multiple layers causes exponential decay of the gradient"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md"
+  tags: [machine-learning, gradients, deep-learning]
+
+- id: ml-grad-resnet-solution
+  topic: gradients
+  difficulty: 1
+  prompt: |
+    How do Residual Connections (as used in ResNets) help solve the vanishing gradient problem?
+  answer: |
+    Residual connections provide an identity shortcut that allows the gradient to bypass layers entirely during backpropagation. This additive path mitigates the multiplicative decay caused by the chain rule, allowing a strong gradient signal to reach the early layers of deep networks.
+  rubric:
+    - "They provide an identity shortcut or bypass for the gradient"
+    - "This creates an additive path that avoids the multiplicative decay of standard backpropagation"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md"
+  tags: [machine-learning, gradients, architectures]
+
+- id: ml-grad-exploding-consequences
+  topic: gradients
+  difficulty: 1
+  prompt: |
+    What are two primary consequences of the exploding gradient problem during neural network training?
+  answer: |
+    1. The optimizer takes massive, unstable steps that completely overshoot the loss minimum, causing training to diverge.
+    2. The weights can grow so large that they cause numerical overflow, resulting in `NaN` (Not a Number) values and a complete crash of the model state.
+  rubric:
+    - "The optimizer overshoots the minimum, causing unstable training or divergence"
+    - "Weights grow too large, causing numerical overflow or NaN values"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md"
+  tags: [machine-learning, gradients, training]
+
+- id: ml-grad-clipping-mechanism
+  topic: gradients
+  difficulty: 2
+  prompt: |
+    What is Gradient Clipping and how is it mathematically applied to prevent exploding gradients?
+  answer: |
+    Gradient Clipping explicitly caps the magnitude of gradients during backpropagation. Typically, if the L2 norm (the length) of the gradient vector exceeds a predefined threshold, the entire gradient vector is scaled down proportionately so that its norm exactly equals that threshold, preserving the direction but reducing the step size.
+  rubric:
+    - "It explicitly caps or limits the magnitude of the gradients"
+    - "If the L2 norm exceeds a threshold, the gradient is scaled down to match the threshold (preserving direction)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Vanishing_and_Exploding_Gradients.md"
+  tags: [machine-learning, gradients, regularisation]

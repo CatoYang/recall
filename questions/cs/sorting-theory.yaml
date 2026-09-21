@@ -1,0 +1,63 @@
+- id: sort-theory-stability
+  topic: sorting-theory
+  difficulty: 1
+  prompt: |
+    In the context of sorting algorithms, what does it mean for an algorithm to be "stable"?
+  answer: |
+    A stable sorting algorithm preserves the relative order of equal elements in the sorted output. If two elements have the same key, their original sequential order in the input is maintained.
+  rubric:
+    - "Preserves the relative order"
+    - "Of equal elements (or elements with the same key)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-theory-in-place
+  topic: sorting-theory
+  difficulty: 1
+  prompt: |
+    What defines an "in-place" sorting algorithm, and why is this property important in practice?
+  answer: |
+    An in-place sorting algorithm transforms the input data structure using only a small, constant amount of extra memory space (typically `O(1)` or `O(log n)` auxiliary space). It is important because allocating an entirely new array for massive datasets can cause memory exhaustion.
+  rubric:
+    - "Uses a small, constant amount of extra memory space (O(1) auxiliary space)"
+    - "Important to prevent memory exhaustion on large datasets"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-theory-adaptivity
+  topic: sorting-theory
+  difficulty: 2
+  prompt: |
+    What does it mean for a sorting algorithm to be "adaptive", and why is this useful for real-world data?
+  answer: |
+    An adaptive algorithm's execution time improves when the input array is already partially sorted. This is useful because real-world data is rarely purely random and often contains pre-sorted sequences (runs) that an adaptive algorithm can exploit to finish faster.
+  rubric:
+    - "Execution time improves when the input is partially sorted"
+    - "Exploits naturally occurring pre-sorted sequences (runs) in real-world data"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-theory-lower-bound
+  topic: sorting-theory
+  difficulty: 2
+  prompt: |
+    What is the absolute fastest worst-case time complexity that any comparison-based sorting algorithm can achieve, and what mathematical model is typically used to prove this?
+  answer: |
+    The absolute fastest worst-case time complexity is $\Omega(n \log n)$. This limit is proven mathematically using the **Decision Tree Model**, which shows that a binary tree resolving $n!$ permutations must have a height of at least $\Omega(n \log n)$.
+  rubric:
+    - "Omega(n log n) or O(n log n)"
+    - "Proven using the Decision Tree Model"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/01_Sorting_Theory_and_Bounds.md"
+  tags: [computer-science, algorithms, sorting]

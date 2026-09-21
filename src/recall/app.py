@@ -8,7 +8,9 @@ from textual import work
 from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.containers import Horizontal, VerticalScroll
-from textual.widgets import Footer, Header, Label, Markdown, Static, TextArea
+from textual.screen import Screen
+from textual.widgets import Footer, Header, Label, Markdown, OptionList, Static, TextArea
+from textual.widgets.option_list import Option
 
 from .grader import Grader
 from .schema import Grade, Question
@@ -16,24 +18,56 @@ from .scheduler import ReviewSession, bank_summary, grade_to_rating
 from .store import QuestionBank, ReviewStore
 
 _VERDICT_STYLE = {"correct": "green", "partial": "yellow", "incorrect": "red"}
+_ALL_TOPICS = "__all__"
 
 
-class RecallApp(App):
-    CSS_PATH = "app.tcss"
-    TITLE = "recall"
+class TopicSelectScreen(Screen):
+    """Startup menu: pick a topic to drill, or all of them."""
+
+    BINDINGS = [Binding("ctrl+q", "quit", "Quit")]
+
+    def __init__(self, bank: QuestionBank, store: ReviewStore):
+        super().__init__()
+        self.bank = bank
+        self.store = store
+
+    def compose(self) -> ComposeResult:
+        yield Header()
+        yield Label("Pick a topic (Enter to start, Ctrl+Q to quit)", id="menu-label")
+        yield OptionList(*self._options())
+        yield Footer()
+
+    def _options(self) -> list[Option]:
+        counts: dict[str, int] = {}
+        for q in self.bank.servable():
+            counts[q.topic] = counts.get(q.topic, 0) + 1
+        options = [Option(f"All topics ({sum(counts.values())})", id=_ALL_TOPICS)]
+        for topic in sorted(counts):
+            due = len(ReviewSession(self.bank, self.store, topic=topic).queue())
+            options.append(Option(f"{topic} - {due} due / {counts[topic]} total", id=topic))
+        return options
+
+    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+        topic = None if event.option.id == _ALL_TOPICS else event.option.id
+        self.app.push_screen(ReviewScreen(self.bank, self.store, topic))
+
+
+class ReviewScreen(Screen):
+    """One drilling session, optionally scoped to a single topic."""
 
     BINDINGS = [
         Binding("ctrl+s", "submit", "Submit answer"),
         Binding("ctrl+n", "next", "Next question"),
         Binding("ctrl+r", "reveal", "Reveal reference"),
+        Binding("escape", "back", "Topic menu"),
         Binding("ctrl+q", "quit", "Quit"),
     ]
 
-    def __init__(self, questions_dir: Path, db_path: Path, topic: str | None = None):
+    def __init__(self, bank: QuestionBank, store: ReviewStore, topic: str | None = None):
         super().__init__()
-        self.bank = QuestionBank(questions_dir)
-        self.store = ReviewStore(db_path)
-        self.session = ReviewSession(self.bank, self.store, topic=topic)
+        self.bank = bank
+        self.store = store
+        self.session = ReviewSession(bank, store, topic=topic)
         self.queue: list[Question] = []
         self.current: Question | None = None
         self.grading = False
@@ -52,7 +86,7 @@ class RecallApp(App):
         yield Footer()
 
     def on_mount(self) -> None:
-        self.sub_title = bank_summary(self.bank)
+        self.screen.sub_title = bank_summary(self.bank)
         self.queue = self.session.queue()
         self.advance()
         self.query_one("#answer", TextArea).focus()
@@ -65,7 +99,8 @@ class RecallApp(App):
             self.query_one("#prompt", Markdown).update("## Nothing due\n\nQueue is empty.")
             self.query_one("#meta", Label).update("")
             self.query_one("#feedback", Static).update(
-                f"Session complete. {self.store.stats()['reviews']} reviews on record."
+                f"Session complete. {self.store.stats()['reviews']} reviews on record.\n\n"
+                "Escape for the topic menu."
             )
             return
         self.current = self.queue.pop(0)
@@ -80,11 +115,13 @@ class RecallApp(App):
         area.focus()
         self.query_one("#feedback", Static).update("Answer, then Ctrl+S to grade.")
 
-    # -------------------------------------------------------------- actions
-
     def action_next(self) -> None:
         if not self.grading:
             self.advance()
+
+    def action_back(self) -> None:
+        if not self.grading:
+            self.app.pop_screen()
 
     def action_reveal(self) -> None:
         if self.current:
@@ -145,6 +182,23 @@ class RecallApp(App):
             f"[red]Grading failed[/]\n\n{type(exc).__name__}: {exc}\n\n"
             "Ctrl+S retries. Is ANTHROPIC_API_KEY set?"
         )
+
+
+class RecallApp(App):
+    CSS_PATH = "app.tcss"
+    TITLE = "recall"
+
+    def __init__(self, questions_dir: Path, db_path: Path, topic: str | None = None):
+        super().__init__()
+        self.bank = QuestionBank(questions_dir)
+        self.store = ReviewStore(db_path)
+        self._initial_topic = topic
+
+    def on_mount(self) -> None:
+        if self._initial_topic is not None:
+            self.push_screen(ReviewScreen(self.bank, self.store, self._initial_topic))
+        else:
+            self.push_screen(TopicSelectScreen(self.bank, self.store))
 
     def on_unmount(self) -> None:
         self.store.close()

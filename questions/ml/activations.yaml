@@ -1,0 +1,79 @@
+- id: ml-act-non-linearity-purpose
+  topic: activations
+  difficulty: 1
+  prompt: |
+    Why must deep neural networks use non-linear activation functions in their hidden layers instead of linear ones?
+  answer: |
+    Without non-linear activation functions, a deep neural network mathematically collapses into a single linear transformation (equivalent to one large matrix multiplication). The non-linearities are strictly required to allow the network to model complex, non-linear relationships in the data; otherwise, adding multiple hidden layers provides no additional representational power.
+  rubric:
+    - "Without them, the network collapses into a single linear transformation"
+    - "They are required to model complex, non-linear relationships"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md"
+  tags: [machine-learning, activations, deep-learning]
+
+- id: ml-act-dying-relu
+  topic: activations
+  difficulty: 2
+  prompt: |
+    What is the "Dying ReLU" problem and what causes it?
+  answer: |
+    The Dying ReLU problem occurs when large negative weight updates cause a neuron using the ReLU activation function to consistently output zero for all inputs in the dataset. Because the derivative of ReLU is exactly zero for all inputs $x \le 0$, the neuron receives no gradient signal during backpropagation and its weights can never update, permanently disabling it.
+  rubric:
+    - "Occurs when a neuron consistently outputs zero for all inputs"
+    - "Because the derivative of ReLU is zero for negative inputs, the neuron's weights can never update or recover"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md"
+  tags: [machine-learning, activations, gradients]
+
+- id: ml-act-tanh-vs-sigmoid
+  topic: activations
+  difficulty: 1
+  prompt: |
+    What is the primary mathematical advantage of the Hyperbolic Tangent (Tanh) activation function over the standard Sigmoid function?
+  answer: |
+    The primary advantage of Tanh is that it is zero-centered (mapping inputs to a range between -1 and 1), whereas Sigmoid maps to a range between 0 and 1. Being zero-centered means the mean of the activations is closer to zero, which helps center the data and prevents erratic gradient updates during backpropagation.
+  rubric:
+    - "Tanh is zero-centered (outputs between -1 and 1)"
+    - "Being zero-centered helps center the data and makes gradient updates more stable"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md"
+  tags: [machine-learning, activations, math]
+
+- id: ml-act-leaky-vs-prelu
+  topic: activations
+  difficulty: 2
+  prompt: |
+    What is the structural difference between the Leaky ReLU and Parametric ReLU (PReLU) activation functions?
+  answer: |
+    Both functions allow a small, non-zero gradient for negative inputs to prevent the Dying ReLU problem ($f(x) = \alpha x$ for $x \le 0$). The difference is that in Leaky ReLU, $\alpha$ is a fixed, pre-defined constant, whereas in PReLU, $\alpha$ is a learned parameter that is optimized during the training process alongside the network weights.
+  rubric:
+    - "In Leaky ReLU, the alpha coefficient for negative inputs is a fixed constant"
+    - "In PReLU, the alpha coefficient is a learned parameter optimized during training"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md"
+  tags: [machine-learning, activations, deep-learning]
+
+- id: ml-act-softmax-purpose
+  topic: activations
+  difficulty: 1
+  prompt: |
+    What is the mathematical purpose of the Softmax activation function when used in the output layer of a neural network?
+  answer: |
+    The Softmax function converts a vector of raw scores (logits) into a categorical probability distribution. It does this by exponentiating each score and normalizing them, ensuring that every output value falls in the range $(0, 1)$ and that all output values strictly sum to 1.
+  rubric:
+    - "Converts raw scores/logits into a probability distribution"
+    - "Ensures all outputs are between 0 and 1, and that they sum to exactly 1"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Activation_Functions.md"
+  tags: [machine-learning, activations, probabilities]

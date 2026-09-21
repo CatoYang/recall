@@ -1,0 +1,52 @@
+- id: sort-ds-heap-mechanism
+  topic: sorting-data-structure
+  difficulty: 1
+  prompt: |
+    Briefly describe the mechanism of Heap Sort and state its worst-case time and space complexity.
+  answer: |
+    Heap Sort transforms the input array into a Binary Max-Heap, repeatedly extracts the maximum element (placing it at the end of the array), and sifts down the new root to restore the heap property.
+    Time complexity: $O(n \log n)$ worst-case.
+    Space complexity: $O(1)$ (in-place).
+  rubric:
+    - "Transforms the array into a Binary Max-Heap"
+    - "Repeatedly extracts the maximum element and restores the heap property"
+    - "Time complexity: O(n log n)"
+    - "Space complexity: O(1)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+  tags: [computer-science, algorithms, sorting, data-structures]
+
+- id: sort-ds-heap-vs-quick
+  topic: sorting-data-structure
+  difficulty: 2
+  prompt: |
+    Why is Heap Sort often used as a fallback safety algorithm for Quick Sort in production environments (like C++'s `std::sort`), even though it is generally slower in practice?
+  answer: |
+    While Heap Sort is generally slower than Quick Sort due to poor CPU cache locality, it is mathematically guaranteed to run in $O(n \log n)$ time even in the worst-case scenario, acting as a perfect safety net to prevent Quick Sort's catastrophic $O(n^2)$ degradation.
+  rubric:
+    - "Guaranteed to run in O(n log n) time in the worst-case scenario"
+    - "Acts as a safety net to prevent Quick Sort's O(n^2) worst-case degradation"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-ds-tree-sort-degradation
+  topic: sorting-data-structure
+  difficulty: 2
+  prompt: |
+    What is the worst-case time complexity of standard Tree Sort, and under what condition does it occur?
+  answer: |
+    The worst-case time complexity is $O(n^2)$. This occurs if the input data is already sorted (or reverse sorted) and is inserted into a standard Binary Search Tree, causing the tree to become completely unbalanced (degrading into a linked list) and making each insertion take $O(n)$ time.
+  rubric:
+    - "Worst-case time complexity is O(n^2)"
+    - "Occurs when data is already sorted (or reverse sorted)"
+    - "Causes the tree to become completely unbalanced (or degrade into a linked list)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/04_Data_Structure_Sorts.md"
+  tags: [computer-science, algorithms, sorting, data-structures]

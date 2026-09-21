@@ -1,0 +1,66 @@
+- id: ml-arch-expansion-vs-bottleneck
+  topic: architecture
+  difficulty: 2
+  prompt: |
+    In neural network design, what is the distinct purpose of an "expansion" layer versus a "compression" (bottleneck) layer?
+  answer: |
+    An **expansion** layer ($D_{out} > D_{in}$) maps data into a higher-dimensional space, which helps the network learn complex non-linear separability that isn't possible in lower dimensions. A **compression** or bottleneck layer ($D_{out} < D_{in}$) forces the network to reduce dimensionality, acting as implicit regularization by making the network discard noise and learn only the most salient, critical features.
+  rubric:
+    - "Expansion layers map to higher dimensions to learn complex non-linear separability"
+    - "Compression/bottleneck layers force dimensionality reduction, extracting only the most salient features (or discarding noise)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md"
+  tags: [machine-learning, architecture, deep-learning]
+
+- id: ml-arch-funnel-pattern
+  topic: architecture
+  difficulty: 1
+  prompt: |
+    Describe the "Funnel" architectural shape commonly used in classification neural networks.
+  answer: |
+    The Funnel architecture starts with very wide early layers to capture a vast array of low-level features. As the network deepens, the layers become progressively narrower, compressing these broad features into dense, high-level semantic representations before reaching the final classification head.
+  rubric:
+    - "Starts with wide layers for low-level features"
+    - "Progressively narrows to compress features into high-level semantic representations"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md"
+  tags: [machine-learning, architecture, deep-learning]
+
+- id: ml-arch-abstraction-hierarchy
+  topic: architecture
+  difficulty: 1
+  prompt: |
+    How does a deep neural network hierarchically build feature abstractions from low-level to high-level layers?
+  answer: |
+    1. **Low-Level Layers:** Detect basic, localized patterns like edges, gradients, and simple textures.
+    2. **Mid-Level Layers:** Combine these low-level features into intermediate shapes and object parts.
+    3. **High-Level Layers:** Assemble the intermediate shapes into complex, semantic, and recognizable whole objects or concepts.
+  rubric:
+    - "Low-level layers detect basic patterns like edges or gradients"
+    - "Mid-level layers form intermediate shapes or parts"
+    - "High-level layers assemble these into complex semantic objects or concepts"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md"
+  tags: [machine-learning, architecture, deep-learning]
+
+- id: ml-arch-depth-vs-width
+  topic: architecture
+  difficulty: 2
+  prompt: |
+    When scaling a neural network, what are the distinct risks of increasing the network's depth versus increasing its width?
+  answer: |
+    Increasing **depth** exponentially increases representational abstraction but severely exacerbates the vanishing gradient problem and creates a highly non-convex loss surface. Increasing **width** increases the model's capacity for memorization, which, if taken too far, causes the model to severely overfit by memorizing the training data instead of learning generalizable patterns.
+  rubric:
+    - "Increasing depth exacerbates the vanishing gradient problem"
+    - "Increasing width increases the risk of severe overfitting (memorization of training data)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Neural_Architecture.md"
+  tags: [machine-learning, architecture, hyperparameters]

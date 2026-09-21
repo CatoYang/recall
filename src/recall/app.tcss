@@ -2,6 +2,11 @@
 
 
 
+#menu-label {
+    padding: 1 2;
+    color: $text-muted;
+}
+
 #body {
     height: 1fr;
 }

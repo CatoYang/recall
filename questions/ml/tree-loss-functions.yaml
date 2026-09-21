@@ -1,0 +1,79 @@
+- id: ml-tree-loss-mae-vs-mse-leaves
+  topic: tree-loss-functions
+  difficulty: 2
+  prompt: |
+    In Gradient Boosted Models (GBMs), how does the choice between Mean Absolute Error (MAE) and Mean Squared Error (MSE) change the optimal prediction value calculated at each terminal leaf node?
+  answer: |
+    When minimizing Mean Squared Error (MSE), the optimal prediction value for a leaf is the **mean** of the target values in that leaf. When minimizing Mean Absolute Error (MAE), the optimal prediction value for a leaf is the **median** of the target values.
+  rubric:
+    - "MSE optimal leaf weight is the mean of the values"
+    - "MAE optimal leaf weight is the median of the values"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md"
+  tags: [machine-learning, decision-trees, loss-functions]
+
+- id: ml-tree-loss-huber-hybrid
+  topic: tree-loss-functions
+  difficulty: 2
+  prompt: |
+    How does Huber Loss act as a hybrid loss function in gradient boosting?
+  answer: |
+    Huber Loss requires a hyperparameter threshold ($\delta$). For errors smaller than this threshold, it applies a quadratic penalty like Mean Squared Error (MSE), providing smooth gradients near the minimum. For errors larger than this threshold, it applies a linear penalty like Mean Absolute Error (MAE), ensuring the model remains robust to severe outliers.
+  rubric:
+    - "Acts like MSE (quadratic penalty) for small errors"
+    - "Acts like MAE (linear penalty) for large errors/outliers"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md"
+  tags: [machine-learning, decision-trees, loss-functions]
+
+- id: ml-tree-loss-quantile-asymmetry
+  topic: tree-loss-functions
+  difficulty: 2
+  prompt: |
+    What is the primary purpose of using Quantile Loss in a gradient boosted model, and how does it mathematically achieve this?
+  answer: |
+    The primary purpose of Quantile Loss is to predict a specific percentile of the target distribution (e.g., the 90th percentile) rather than the mean. It achieves this by applying an asymmetric penalty to errors; for example, if predicting the 90th percentile, it penalizes under-predictions heavily while penalizing over-predictions very lightly.
+  rubric:
+    - "Used to predict a specific percentile or quantile (not the mean)"
+    - "Achieves this by applying an asymmetric penalty to errors (differing penalties for over vs under prediction)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md"
+  tags: [machine-learning, decision-trees, probability]
+
+- id: ml-tree-loss-tweedie
+  topic: tree-loss-functions
+  difficulty: 3
+  prompt: |
+    What specific type of dataset distribution is the Tweedie Loss function uniquely designed to handle when the variance power hyperparameter $1 < p < 2$?
+  answer: |
+    When the variance power hyperparameter $p$ is between 1 and 2, Tweedie Loss is uniquely designed to handle zero-inflated continuous data (a Compound Poisson-Gamma distribution). This is data that contains a massive concentration of exact zeros mixed with positive continuous values (e.g., insurance claim amounts or rainfall measurements).
+  rubric:
+    - "Zero-inflated continuous data"
+    - "Data with a large mass at exactly zero combined with positive continuous values"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md"
+  tags: [machine-learning, loss-functions, statistics]
+
+- id: ml-tree-loss-cox
+  topic: tree-loss-functions
+  difficulty: 1
+  prompt: |
+    In what specific analytical domain would you configure a gradient boosted model to use Cox Proportional Hazards as the loss function?
+  answer: |
+    Cox Proportional Hazards is used for survival analysis (time-to-event modeling). It is required when modeling the time until a specific event occurs while explicitly handling "censored" data (cases where the observation period ended before the event actually occurred).
+  rubric:
+    - "Survival analysis or time-to-event modeling"
+    - "Handling censored data"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Loss_Functions.md"
+  tags: [machine-learning, survival-analysis, loss-functions]

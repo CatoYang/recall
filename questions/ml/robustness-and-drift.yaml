@@ -1,0 +1,63 @@
+- id: ml-eval-covariate-vs-concept-drift
+  topic: robustness-and-drift
+  difficulty: 2
+  prompt: |
+    What is the fundamental mathematical difference between Covariate Shift (Data Drift) and Concept Drift?
+  answer: |
+    In Covariate Shift, the distribution of the input features changes ($P(X_{train}) \neq P(X_{prod})$), but the conditional relationship between inputs and targets ($P(Y|X)$) remains constant. In Concept Drift, the fundamental mapping or conditional relationship itself changes ($P(Y|X)_{train} \neq P(Y|X)_{prod}$), meaning the definition of the target variable given the features has evolved.
+  rubric:
+    - "Covariate shift: feature distribution P(X) changes but conditional P(Y|X) remains constant"
+    - "Concept drift: the conditional relationship P(Y|X) changes"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md"
+  tags: [machine-learning, evaluation, concept-drift]
+
+- id: ml-eval-gini-coefficient-vs-impurity
+  topic: robustness-and-drift
+  difficulty: 2
+  prompt: |
+    How does the Gini Coefficient used in model evaluation mathematically relate to the ROC AUC, and how must it be distinguished from Gini Impurity?
+  answer: |
+    In model evaluation (especially credit scoring), the Gini Coefficient measures discriminatory power and is mathematically equivalent to $2 \times \text{AUC} - 1$. This must be distinguished from Gini Impurity, which is a metric used to evaluate split quality during the training of decision tree models (like CART).
+  rubric:
+    - "Gini Coefficient is mathematically equivalent to 2 * AUC - 1"
+    - "Gini Coefficient is an evaluation metric for discriminatory power, whereas Gini Impurity is a splitting criterion for training decision trees"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md"
+  tags: [machine-learning, evaluation, metrics]
+
+- id: ml-eval-brier-score
+  topic: robustness-and-drift
+  difficulty: 1
+  prompt: |
+    What does the Brier Score evaluate in the context of predictive modeling?
+  answer: |
+    The Brier Score evaluates the accuracy of probabilistic predictions. It is calculated as the mean squared difference between the predicted probabilities assigned to possible outcomes and the actual binary outcomes.
+  rubric:
+    - "Evaluates the accuracy of probabilistic predictions"
+    - "Calculated as the mean squared difference between predicted probabilities and actual outcomes"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md"
+  tags: [machine-learning, evaluation, probability]
+
+- id: ml-eval-domain-classifier-drift
+  topic: robustness-and-drift
+  difficulty: 2
+  prompt: |
+    How can a "Domain Classifier" be used as a multivariate technique to detect data drift between a training set and a production set?
+  answer: |
+    A Domain Classifier is trained on a combined dataset of both training and production data, where the target label is the origin of the data (e.g., 0 for training, 1 for production). If the classifier can accurately distinguish between the two sets (i.e., it has a high AUC), it indicates significant multivariate data drift has occurred between the environments.
+  rubric:
+    - "Train a classifier to predict whether a data point belongs to the training set or the production set"
+    - "If the classifier performs well (can distinguish the sets), it indicates significant data drift"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/03_Robustness_Generalization_and_Drift.md"
+  tags: [machine-learning, evaluation, drift-detection]

@@ -1,0 +1,66 @@
+- id: ml-init-zero-symmetry-problem
+  topic: initialisation
+  difficulty: 2
+  prompt: |
+    Why is initializing all weights in a neural network to zero fundamentally problematic for training?
+  answer: |
+    Initializing all weights to zero causes the "Symmetry Problem." Because every neuron in a given layer computes the exact same output, they all receive the exact same gradient during backpropagation and update in the exact same way. This prevents the network from learning diverse features, effectively reducing the layer's capacity to that of a single neuron.
+  rubric:
+    - "Causes the Symmetry Problem"
+    - "All neurons compute the same gradients and update identically"
+    - "Prevents the network from learning diverse features"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md"
+  tags: [machine-learning, initialisation, neural-networks]
+
+- id: ml-init-he-vs-xavier
+  topic: initialisation
+  difficulty: 2
+  prompt: |
+    Why does He (Kaiming) initialization use a variance of $2/n_{in}$ while Xavier (Glorot) initialization uses a variance based on both fan-in and fan-out, and which activation function is He initialization specifically designed for?
+  answer: |
+    He initialization is designed specifically for the ReLU activation function. Because ReLU zeroes out all negative values, it effectively cuts the variance of the signal in half as it passes through the layer. He initialization compensates for this by doubling the variance (hence the 2 in the numerator). Xavier is designed for symmetric activations like Tanh or Sigmoid, which don't halve the variance in the same way.
+  rubric:
+    - "He initialization is designed for ReLU (and its variants)"
+    - "ReLU cuts the signal variance in half by zeroing negative values"
+    - "He initialization compensates by doubling the variance (using a factor of 2)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md"
+  tags: [machine-learning, initialisation, deep-learning]
+
+- id: ml-init-orthogonal-property
+  topic: initialisation
+  difficulty: 3
+  prompt: |
+    How does Orthogonal Initialization theoretically prevent the vanishing and exploding gradient problems at the start of training?
+  answer: |
+    Orthogonal Initialization sets the weight matrix as an orthogonal matrix (where $W^T W = I$). Geometrically, multiplying a vector by an orthogonal matrix rotates or reflects the vector but perfectly preserves its length (L2 norm). This ensures that the magnitude of the signal and gradients neither shrinks (vanishes) nor grows (explodes) as they pass through the layers.
+  rubric:
+    - "Initializes weights as an orthogonal matrix"
+    - "Orthogonal matrices preserve the length or L2 norm of the input vector"
+    - "Ensures signal variance doesn't shrink or grow uncontrollably"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md"
+  tags: [machine-learning, initialisation, gradients]
+
+- id: ml-init-transfer-learning-head-vs-backbone
+  topic: initialisation
+  difficulty: 1
+  prompt: |
+    In the context of transfer learning (a "warm start"), how are the weights of the "backbone" typically initialized versus the weights of the "head"?
+  answer: |
+    The "backbone" (the early feature-extracting layers) is initialized by loading pre-trained weights from a model trained on a massive dataset. The "head" (the final layers specific to the new target task) is initialized randomly from scratch (using standard mathematical techniques like He or Xavier).
+  rubric:
+    - "Backbone is initialized with pre-trained weights from a large dataset model"
+    - "Head is initialized randomly from scratch (e.g., using He or Xavier)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Initialisation_Techniques.md"
+  tags: [machine-learning, initialisation, transfer-learning]

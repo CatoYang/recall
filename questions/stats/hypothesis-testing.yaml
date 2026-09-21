@@ -1,0 +1,81 @@
+- id: stat-hyp-type-errors
+  topic: hypothesis-testing
+  difficulty: 1
+  prompt: |
+    In statistical hypothesis testing, what are the strict definitions of a Type I Error and a Type II Error?
+  answer: |
+    - **Type I Error ($\alpha$):** A False Positive. Occurs when you reject the Null Hypothesis ($H_0$) when it is actually true.
+    - **Type II Error ($\beta$):** A False Negative. Occurs when you fail to reject the Null Hypothesis ($H_0$) when the Alternative Hypothesis ($H_a$) is actually true.
+  rubric:
+    - "Type I Error is a False Positive (rejecting a true null hypothesis)"
+    - "Type II Error is a False Negative (failing to reject a false null hypothesis)"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [statistics, hypothesis-testing]
+
+- id: stat-hyp-parametric-vs-nonparametric
+  topic: hypothesis-testing
+  difficulty: 1
+  prompt: |
+    What is the fundamental difference between parametric and non-parametric statistical methods?
+  answer: |
+    **Parametric methods** assume that the data is drawn from a specific, known family of probability distributions (like the Normal distribution) defined by a fixed set of parameters. **Non-parametric methods** do not assume a specific distributional form, making much weaker assumptions about the underlying data.
+  rubric:
+    - "Parametric methods assume the data comes from a specific distribution family"
+    - "Non-parametric methods do not assume a specific distribution or make weaker assumptions"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [statistics, hypothesis-testing, experimental-design]
+
+- id: stat-hyp-omnibus-test
+  topic: hypothesis-testing
+  difficulty: 2
+  prompt: |
+    What is the purpose of an "omnibus test" (such as the overall F-test in ANOVA) and what crucial information does it *not* provide?
+  answer: |
+    An omnibus test checks for an **overall effect** across a model (e.g., answering "is there *any* effect at all?"). However, it does *not* provide specific information about where that effect lies (e.g., it will tell you that at least one group mean is different, but not *which specific groups* differ, requiring post-hoc tests to investigate).
+  rubric:
+    - "Checks for an overall or global effect"
+    - "Does not tell you where the specific effect lies (e.g., which specific groups differ)"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [statistics, hypothesis-testing, anova]
+
+- id: stat-hyp-alpha-inflation
+  topic: hypothesis-testing
+  difficulty: 2
+  prompt: |
+    In the context of conducting multiple hypothesis tests on the same dataset, what is "Alpha Inflation"?
+  answer: |
+    Alpha Inflation (also known as the Multiple Testing Problem) is the phenomenon where the cumulative probability of making at least one Type I Error (False Positive) increases mathematically as you conduct more independent hypothesis tests on the same data.
+  rubric:
+    - "Probability of making a Type I Error (False Positive) increases"
+    - "Occurs when conducting multiple tests on the same data"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [statistics, hypothesis-testing, multiple-testing]
+
+- id: stat-hyp-degrees-of-freedom
+  topic: hypothesis-testing
+  difficulty: 1
+  prompt: |
+    What is the general mathematical formula for calculating the Degrees of Freedom ($df$) in statistical modeling?
+  answer: |
+    The general formula is:
+    $\text{Degrees of Freedom} = \text{Number of observations} - \text{Number of estimated parameters}$
+  rubric:
+    - "Number of observations"
+    - "Minus the number of estimated parameters"
+  provenance:
+    status: unverified
+    source: "vault note: 04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md."
+    vault_ref: "04_Exploratory_Data_Analysis_and_Statistics/Statistical_Experiments_and_Hypothesis_Testing.md"
+  tags: [statistics, hypothesis-testing]

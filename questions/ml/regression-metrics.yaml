@@ -1,0 +1,80 @@
+- id: ml-reg-mae-vs-mse-outliers
+  topic: regression-metrics
+  difficulty: 1
+  prompt: |
+    How do Mean Absolute Error (MAE) and Mean Squared Error (MSE) differ in how they penalize large prediction errors (outliers)?
+  answer: |
+    MAE applies a linear penalty to errors, making it robust to outliers because large errors are weighted proportionately to their absolute size. MSE applies a quadratic (squared) penalty, meaning it disproportionately penalizes large errors, making it highly sensitive to outliers.
+  rubric:
+    - "MAE applies a linear penalty (robust to outliers)"
+    - "MSE applies a quadratic or squared penalty (heavily penalizes outliers)"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md"
+  tags: [machine-learning, metrics, regression]
+
+- id: ml-reg-mape-limitations
+  topic: regression-metrics
+  difficulty: 2
+  prompt: |
+    What are two primary mathematical limitations of the Mean Absolute Percentage Error (MAPE) metric?
+  answer: |
+    1. It is undefined (results in division by zero) if the actual target value $y = 0$.
+    2. It is mathematically asymmetrical: it penalizes over-predictions more heavily than under-predictions because the absolute error is divided by the actual value.
+  rubric:
+    - "Undefined when the actual target value is exactly zero"
+    - "Asymmetrical penalty (penalizes over-predictions more heavily than under-predictions)"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md"
+  tags: [machine-learning, metrics, regression]
+
+- id: ml-reg-r2-baseline
+  topic: regression-metrics
+  difficulty: 1
+  prompt: |
+    If a regression model achieves a Coefficient of Determination ($R^2$) of exactly 0, what does this mathematically imply about its predictions?
+  answer: |
+    An $R^2$ of 0 indicates that the model explains none of the variance in the target variable. It implies the model performs exactly as well as a naive baseline model that merely predicts the mean of the target variable $y$ for every input.
+  rubric:
+    - "Explains none of the variance in the target variable"
+    - "Performs exactly the same as a model predicting the mean of the target variable"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md"
+  tags: [machine-learning, metrics, regression]
+
+- id: ml-reg-adjusted-r2
+  topic: regression-metrics
+  difficulty: 2
+  prompt: |
+    Why is Adjusted $R^2$ often preferred over standard $R^2$ when evaluating multiple linear regression models with many features?
+  answer: |
+    Standard $R^2$ mechanically increases (or stays flat) every time a new feature is added to the model, regardless of whether the feature is actually informative, leading to a false sense of improvement. Adjusted $R^2$ applies a penalty for adding variables, meaning it only increases if the new feature improves the model more than would be expected by chance.
+  rubric:
+    - "Standard R^2 mechanically increases when adding features (informative or not)"
+    - "Adjusted R^2 applies a penalty for adding variables (only increases if improvement exceeds chance)"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md"
+  tags: [machine-learning, metrics, regression]
+
+- id: ml-reg-rmsle-usecase
+  topic: regression-metrics
+  difficulty: 2
+  prompt: |
+    For what specific type of target variable distribution is the Root Mean Squared Logarithmic Error (RMSLE) metric most ideal, and why?
+  answer: |
+    RMSLE is ideal for target variables with exponential growth or heavy-tailed distributions (like prices or populations). By applying a logarithmic transformation, it penalizes the *relative* percentage differences rather than the *absolute* differences, preventing predictions on massive absolute values from dominating the entire error metric.
+  rubric:
+    - "Ideal for targets with exponential growth or heavy-tailed distributions"
+    - "Penalizes relative differences rather than absolute differences"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Classification_and_Regression_Metrics/02_Regression_Metrics.md"
+  tags: [machine-learning, metrics, regression]

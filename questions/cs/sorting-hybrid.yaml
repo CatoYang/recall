@@ -1,0 +1,48 @@
+- id: sort-hybrid-timsort-philosophy
+  topic: sorting-hybrid
+  difficulty: 2
+  prompt: |
+    What is the core philosophy and strategy behind Timsort (used in Python and Java) that makes it so efficient on real-world data?
+  answer: |
+    Timsort is built on the philosophy that real-world data is rarely purely random and frequently contains naturally occurring, pre-sorted sequences (called "runs"). Timsort aggressively hunts for these runs, extends them using Insertion Sort if they are too short, and then merges them together using Merge Sort, allowing it to achieve $O(n)$ time on nearly sorted data.
+  rubric:
+    - "Real-world data often contains naturally occurring, pre-sorted sequences (runs)"
+    - "Hunts for these runs and exploits them (using Insertion and Merge sort)"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-hybrid-introsort-watchdog
+  topic: sorting-hybrid
+  difficulty: 2
+  prompt: |
+    In the Introsort algorithm (used in C++ `std::sort`), what specific role does Heap Sort play?
+  answer: |
+    Heap Sort acts as a "watchdog" or safety net. The algorithm primarily uses Quick Sort for sheer speed, but if it detects that the Quick Sort recursion depth has exceeded a certain limit (indicating poor pivots and a slide toward $O(n^2)$ worst-case performance), it immediately halts the Quick Sort recursion and switches to Heap Sort to guarantee an $O(n \log n)$ finish.
+  rubric:
+    - "Acts as a watchdog or safety net"
+    - "Takes over if Quick Sort recursion depth exceeds a limit"
+    - "Guarantees an O(n log n) worst-case finish"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+  tags: [computer-science, algorithms, sorting]
+
+- id: sort-hybrid-introsort-finisher
+  topic: sorting-hybrid
+  difficulty: 2
+  prompt: |
+    In the Introsort algorithm, why does it deliberately stop Quick Sort partitioning when sub-arrays become very small (e.g., fewer than 16 elements)?
+  answer: |
+    Introsort stops partitioning small sub-arrays to avoid the recursive overhead of Quick Sort on tiny datasets. It leaves these small chunks unsorted and, at the very end of the entire process, runs a single massive pass of **Insertion Sort** over the entire array. Insertion Sort is incredibly fast at cleaning up local, small-scale disorder in $O(n)$ time.
+  rubric:
+    - "To avoid the recursive overhead of Quick Sort on tiny datasets"
+    - "Leaves small chunks unsorted to be cleaned up by a final pass of Insertion Sort"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/IV. Sorting and Searching Algorithms/Sorting/06_Hybrid_Production_Sorts.md"
+  tags: [computer-science, algorithms, sorting]

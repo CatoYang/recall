@@ -1,0 +1,72 @@
+- id: l1-vs-l2-regularisation
+  topic: regularisation
+  difficulty: 1
+  prompt: |
+    Compare the effects of L1 (Lasso) and L2 (Ridge) regularisation on a model's weights.
+  answer: |
+    **L1 Regularisation (Lasso)** adds a penalty equal to the absolute value of the weights ($\sum |w_i|$). Its primary effect is inducing **sparsity** by pushing the weights of less important features exactly to zero, effectively performing feature selection.
+
+    **L2 Regularisation (Ridge)** adds a penalty equal to the square of the weights ($\sum w_i^2$). Its primary effect is **weight decay**. It penalizes large weights heavily, shrinking them toward zero but rarely exactly to zero, keeping them uniformly small to prevent any single feature from dominating.
+  rubric:
+    - States L1 adds an absolute value penalty and induces sparsity (pushes weights to zero)
+    - States L2 adds a squared penalty and induces weight decay (shrinks weights but rarely to exactly zero)
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md"
+  tags: [l1, l2, regularisation, lasso, ridge]
+
+- id: regularisation-bayesian-priors
+  topic: regularisation
+  difficulty: 2
+  prompt: |
+    What are the equivalent Bayesian priors for L1 and L2 regularisation?
+  answer: |
+    - **L1 Regularisation** is mathematically equivalent to placing a **Laplacian Prior** on the model's weights.
+    - **L2 Regularisation** is mathematically equivalent to placing a **Gaussian Prior** on the model's weights.
+  rubric:
+    - Identifies Laplacian prior for L1 regularisation
+    - Identifies Gaussian prior for L2 regularisation
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md"
+  tags: [l1, l2, regularisation, bayesian-priors]
+
+- id: elastic-net-advantage
+  topic: regularisation
+  difficulty: 2
+  prompt: |
+    What limitation of L1 regularisation (Lasso) regarding highly correlated features does Elastic Net solve, and how?
+  answer: |
+    When features are highly correlated, **Lasso arbitrarily drops all but one** of the correlated features, assigning the entire weight to the remaining one.
+
+    **Elastic Net** solves this by combining both L1 and L2 penalties. The L2 component encourages the weights of correlated features to shrink together and remain in the model together, providing a more stable and interpretable selection than pure Lasso.
+  rubric:
+    - States that Lasso arbitrarily drops all but one of highly correlated features
+    - States that Elastic Net's L2 component encourages correlated features to be kept in the model together
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md"
+  tags: [elastic-net, lasso, regularisation]
+
+- id: dropout-mechanism
+  topic: regularisation
+  difficulty: 1
+  prompt: |
+    Describe the mechanism of Dropout during training and inference. Why does it act as an implicit regulariser?
+  answer: |
+    - **Training:** Random neurons are temporarily "dropped out" (ignored) with a probability $p$ at each forward pass.
+    - **Inference:** Dropout is disabled, but the weights are scaled by $1-p$ to account for the larger number of active neurons.
+
+    **Why it regularises:** It prevents the network from relying on any single neuron or specific pathway, forcing it to learn robust, redundant representations. Mathematically, it approximates training a massive ensemble of sub-networks.
+  rubric:
+    - Explains that random neurons are dropped out with probability p during training
+    - Explains that dropout is disabled and weights are scaled by 1-p during inference
+    - States it forces robust/redundant representations by preventing over-reliance on specific neurons (or approximates an ensemble)
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Regularisation_and_Optimization/Regularisation.md"
+  tags: [dropout, regularisation, deep-learning]

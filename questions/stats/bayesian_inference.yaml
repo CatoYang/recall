@@ -1,0 +1,68 @@
+- id: bayes-theorem-components
+  topic: bayesian-inference
+  difficulty: 1
+  prompt: |
+    State Bayes' Theorem for two events $A$ and $B$, and identify the four main components by their standard names (Prior, Posterior, Likelihood, Evidence).
+  answer: |
+    Bayes' Theorem is:
+    $$P(A|B) = \frac{P(B|A) P(A)}{P(B)}$$
+
+    The components are:
+    - **Posterior**: $P(A|B)$ - the updated probability of hypothesis $A$ after observing evidence $B$.
+    - **Prior**: $P(A)$ - the initial probability of $A$ before observing $B$.
+    - **Likelihood**: $P(B|A)$ - the probability of observing evidence $B$ given that $A$ is true.
+    - **Evidence** (or Marginal Likelihood): $P(B)$ - the total probability of observing the evidence.
+  rubric:
+    - States the formula $P(A|B) = \frac{P(B|A) P(A)}{P(B)}$
+    - Identifies P(A|B) as the Posterior
+    - Identifies P(A) as the Prior
+    - Identifies P(B|A) as the Likelihood
+    - Identifies P(B) as the Evidence or Marginal Likelihood
+  provenance:
+    status: unverified
+    source: "vault note: 01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md."
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md"
+  tags: [probability, bayes-theorem, definitions]
+
+- id: map-vs-mle-objective
+  topic: bayesian-inference
+  difficulty: 2
+  prompt: |
+    Explain the difference between Maximum A Posteriori (MAP) and Maximum Likelihood Estimation (MLE) in terms of what probability distribution they maximize. Under what condition does MAP reduce to MLE?
+  answer: |
+    MLE finds parameters $\theta$ that maximize the **Likelihood**, $P(\mathcal{D}|\theta)$.
+    MAP finds parameters $\theta$ that maximize the **Posterior**, $P(\theta|\mathcal{D})$. 
+    
+    Since the posterior is proportional to $P(\mathcal{D}|\theta) P(\theta)$, MAP is equivalent to maximizing the likelihood multiplied by the prior. 
+    
+    MAP reduces to MLE when the prior $P(\theta)$ is a uniform distribution (i.e., all parameter values are assumed equally likely a priori).
+  rubric:
+    - States that MLE maximizes the Likelihood $P(\mathcal{D}|\theta)$
+    - States that MAP maximizes the Posterior $P(\theta|\mathcal{D})$
+    - Explains that MAP reduces to MLE when the prior is uniform
+  provenance:
+    status: unverified
+    source: "vault note: 01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md."
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md"
+  tags: [map, mle, parameter-estimation]
+
+- id: naive-bayes-assumption
+  topic: bayesian-inference
+  difficulty: 1
+  prompt: |
+    What is the strong ("naive") assumption made by the Naive Bayes classifier? State how this assumption simplifies the calculation of the likelihood for a feature vector $\mathbf{x} = (x_1, \dots, x_d)$ given a class $C_k$.
+  answer: |
+    The Naive Bayes classifier assumes **conditional independence** between features given the class label.
+
+    Because of this assumption, the joint likelihood of the feature vector simplifies to the product of the individual feature likelihoods:
+    $$P(\mathbf{x}|C_k) = \prod_{j=1}^d P(x_j|C_k)$$
+
+    This allows the classifier to compute $P(C_k|\mathbf{x}) \propto P(C_k) \prod_{j=1}^d P(x_j|C_k)$.
+  rubric:
+    - Identifies the assumption as conditional independence between features given the class
+    - Shows that the joint likelihood P(x|C_k) factors into the product of individual marginal likelihoods P(x_j|C_k)
+  provenance:
+    status: unverified
+    source: "vault note: 01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md."
+    vault_ref: "01_Foundations_Probability_and_Information_Theory/Probability_Axioms_and_Theorems/Bayes_Theorem.md"
+  tags: [naive-bayes, classification, conditional-independence]

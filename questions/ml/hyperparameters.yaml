@@ -1,0 +1,64 @@
+- id: ml-tune-batch-size-generalisation
+  topic: hyperparameters
+  difficulty: 2
+  prompt: |
+    How does the choice of a small batch size versus a large batch size generally impact a neural network's generalization ability, and why?
+  answer: |
+    Small batch sizes introduce noise into the gradient estimates during training. This noise acts as a form of implicit regularisation, helping the model escape sharp local minima and settle into wider, flatter minima that tend to generalize better to unseen data. Conversely, large batch sizes provide very accurate, smooth gradient estimates but are more prone to converging into sharp minima that generalize poorly.
+  rubric:
+    - "Small batch sizes introduce noise into the gradient estimate"
+    - "The noise acts as implicit regularization, helping find flatter minima that generalize better"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md"
+  tags: [machine-learning, hyperparameters, deep-learning]
+
+- id: ml-tune-random-vs-grid-search
+  topic: hyperparameters
+  difficulty: 1
+  prompt: |
+    Why is Random Search generally preferred over Grid Search for tuning neural network hyperparameters?
+  answer: |
+    Random Search is computationally far more efficient. Empirically, only a small subset of hyperparameters strongly influences model performance on a given dataset. Random Search explores these important, continuous dimensions much more densely than Grid Search, which wastes immense compute testing exhaustive combinations of unimportant hyperparameters.
+  rubric:
+    - "Random search is computationally more efficient (avoids exponential scaling or curse of dimensionality)"
+    - "It explores the important, influential dimensions much more densely than a strict grid"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md"
+  tags: [machine-learning, hyperparameters, optimisation]
+
+- id: ml-tune-tpe-mechanism
+  topic: hyperparameters
+  difficulty: 3
+  prompt: |
+    In the context of Bayesian Optimisation, how does a Tree-Structured Parzen Estimator (TPE) fundamentally differ from a standard Gaussian Process surrogate model regarding what it models?
+  answer: |
+    While a standard Gaussian Process surrogate models the probability of the loss given the hyperparameters ($P(y|x)$), a Tree-Structured Parzen Estimator (TPE) models the probability of the hyperparameters given the loss ($P(x|y)$). This approach makes TPE exceptionally good at handling conditional or hierarchical hyperparameters (e.g., only evaluating a dropout rate if the dropout layer is toggled on).
+  rubric:
+    - "TPE models the probability of the hyperparameters given the loss, P(x|y)"
+    - "Standard models predict the loss given the hyperparameters, P(y|x)"
+    - "TPE is better suited for conditional or hierarchical hyperparameters"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md"
+  tags: [machine-learning, hyperparameters, bayesian-optimisation]
+
+- id: ml-tune-learning-rate-extremes
+  topic: hyperparameters
+  difficulty: 1
+  prompt: |
+    What are the distinct consequences of setting the learning rate ($\eta$) too high versus setting it too low during neural network training?
+  answer: |
+    If the learning rate is too high, the optimizer will take steps that are too large, overshooting the minimum and causing the loss to diverge or oscillate erratically. If the learning rate is too low, the optimizer takes tiny steps, making training impractically slow and leaving the model highly prone to getting stuck in shallow local minima.
+  rubric:
+    - "Too high: Overshoots the minimum, leading to divergence or erratic oscillation"
+    - "Too low: Very slow training and prone to getting stuck in shallow local minima"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Neural_Networks_and_Deep_Learning/Hyperparameters_and_Tuning.md"
+  tags: [machine-learning, hyperparameters, deep-learning]

@@ -1,0 +1,81 @@
+- id: ml-tree-c45-gain-ratio
+  topic: tree-algorithms
+  difficulty: 2
+  prompt: |
+    Why does the C4.5 decision tree algorithm use Gain Ratio instead of ID3's Information Gain for choosing splits?
+  answer: |
+    Information Gain is biased toward features with a large number of distinct values (e.g., ID columns or categorical variables with high cardinality). C4.5 uses Gain Ratio to penalize such features, effectively normalizing the Information Gain by the intrinsic entropy of the feature split.
+  rubric:
+    - "Information Gain is biased toward features with many distinct values (high cardinality)"
+    - "Gain Ratio penalizes or normalizes based on the number of feature categories"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md"
+  tags: [machine-learning, decision-trees, algorithms]
+
+- id: ml-tree-cart-branching
+  topic: tree-algorithms
+  difficulty: 1
+  prompt: |
+    What is a structural difference between trees constructed by the CART algorithm and those constructed by C4.5 regarding branching?
+  answer: |
+    CART constructs strictly binary trees, meaning every internal node splits into exactly two branches. In contrast, C4.5 can create multi-way splits for categorical features with multiple classes.
+  rubric:
+    - "CART creates strictly binary trees (two branches per node)"
+    - "C4.5 can create multi-way (more than two) branches"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md"
+  tags: [machine-learning, decision-trees, algorithms]
+
+- id: ml-tree-rf-randomness
+  topic: tree-algorithms
+  difficulty: 2
+  prompt: |
+    What are the two distinct mechanisms of randomness introduced in a Random Forest to ensure the individual trees are de-correlated?
+  answer: |
+    1. **Data Bagging (Bootstrap Aggregating):** Each tree is trained on a random sample of the dataset drawn with replacement.
+    2. **Feature Randomness:** At every node split, only a random subset of all available features is considered, preventing highly predictive features from dominating every tree.
+  rubric:
+    - "Data bagging or bootstrapping (sampling data with replacement)"
+    - "Feature randomness or sub-sampling features at each node split"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md"
+  tags: [machine-learning, random-forest, ensemble]
+
+- id: ml-tree-lightgbm-growth
+  topic: tree-algorithms
+  difficulty: 2
+  prompt: |
+    How does the tree growth strategy of LightGBM fundamentally differ from the standard approach used in XGBoost, and what risk does it introduce?
+  answer: |
+    LightGBM uses a **leaf-wise (best-first)** growth strategy, meaning it splits the single leaf that offers the maximum loss reduction, resulting in deeper, asymmetrical trees. Standard XGBoost uses **level-wise** growth, building the tree one full level at a time. The leaf-wise approach converges faster but is more prone to overfitting, requiring strict max-depth or leaf limits.
+  rubric:
+    - "LightGBM uses leaf-wise (best-first) growth"
+    - "XGBoost uses level-wise growth"
+    - "Leaf-wise growth increases the risk of overfitting (without depth constraints)"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md"
+  tags: [machine-learning, gradient-boosting, lightgbm, xgboost]
+
+- id: ml-tree-catboost-symmetric
+  topic: tree-algorithms
+  difficulty: 2
+  prompt: |
+    What does it mean that CatBoost builds "symmetric" (or oblivious) trees, and what is the primary advantage of this structure?
+  answer: |
+    Symmetric trees mean that the exact same splitting criterion (feature and threshold) is applied across all nodes at the same depth level of the tree. The primary advantage of this structure is that it makes prediction/inference incredibly fast, as the path can be computed using simple bitwise operations rather than deep conditional branching.
+  rubric:
+    - "The same split criterion is used for all nodes at a given depth level"
+    - "It significantly speeds up inference or prediction time"
+  provenance:
+    status: unverified
+    source: "vault note: 07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md."
+    vault_ref: "07_Advanced_Models_and_Architectures/Tree_and_Rule_Based_Models/Tree_Algorithms.md"
+  tags: [machine-learning, catboost, decision-trees]

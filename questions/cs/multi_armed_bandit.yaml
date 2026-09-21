@@ -1,0 +1,80 @@
+- id: mab-exploration-vs-exploitation
+  topic: multi-armed-bandit
+  difficulty: 1
+  prompt: |
+    Define the "Exploration vs. Exploitation" dilemma in the context of the Multi-Armed Bandit (MAB) problem.
+  answer: |
+    The dilemma involves balancing two competing objectives:
+    - **Exploitation**: Selecting the action (arm) that currently has the highest estimated expected reward based on past knowledge.
+    - **Exploration**: Selecting actions with unknown or uncertain expected rewards to gather more information.
+
+    A purely exploitative strategy risks getting stuck on a suboptimal action, while a purely explorative strategy wastes time gathering information without capitalizing on the best options.
+  rubric:
+    - Defines Exploitation as selecting the best-known option to maximize immediate reward
+    - Defines Exploration as selecting unknown/uncertain options to gather more information
+    - Mentions the trade-off (e.g., getting stuck in local optima vs. wasting resources)
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md"
+  tags: [mab, exploration, exploitation, reinforcement-learning]
+
+- id: mab-epsilon-greedy
+  topic: multi-armed-bandit
+  difficulty: 1
+  prompt: |
+    Describe the $\epsilon$-Greedy (Epsilon-Greedy) strategy for the Multi-Armed Bandit problem. What is its main asymptotic drawback?
+  answer: |
+    The $\epsilon$-Greedy strategy selects the action with the highest estimated value with probability $1 - \epsilon$, and selects an action uniformly at random with probability $\epsilon$.
+    
+    Its main asymptotic drawback is that it continues exploring at a constant rate $\epsilon$ forever, even after it has gathered enough information to be highly confident in the optimal action, making it suboptimal in the long run.
+  rubric:
+    - States that it exploits the best-known action with probability 1 - epsilon
+    - States that it explores randomly with probability epsilon
+    - "Identifies the drawback: it continues exploring at a constant rate even when confident in the optimal action"
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md"
+  tags: [mab, epsilon-greedy]
+
+- id: mab-ucb-principle
+  topic: multi-armed-bandit
+  difficulty: 2
+  prompt: |
+    Explain how the Upper Confidence Bound (UCB) algorithm selects arms in a Multi-Armed Bandit problem. What guiding principle does it embody?
+  answer: |
+    UCB embodies the principle of **"optimism in the face of uncertainty."**
+
+    It assigns a score to each arm consisting of its average historical payout plus an uncertainty bonus (a confidence interval bound derived from Hoeffding's Inequality). 
+    As an arm is pulled more frequently, its uncertainty bonus shrinks. Unexplored arms naturally have higher uncertainty bonuses, forcing the algorithm to investigate them until it is confident they are suboptimal.
+  rubric:
+    - States the principle of "optimism in the face of uncertainty"
+    - Explains that the score is the sum of the estimated reward (average payout) and an uncertainty bonus (confidence interval bound)
+    - Explains that the uncertainty bonus shrinks as an arm is pulled more frequently
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md"
+  tags: [mab, ucb, upper-confidence-bound]
+
+- id: mab-thompson-sampling
+  topic: multi-armed-bandit
+  difficulty: 2
+  prompt: |
+    Describe the mechanism of Thompson Sampling for the Multi-Armed Bandit problem. How does it balance exploration and exploitation?
+  answer: |
+    Thompson Sampling is a fully **Bayesian** approach. It maintains a posterior probability distribution over the true expected reward of each arm.
+
+    Mechanism: In each round, it samples a random value from the posterior distribution of every arm and pulls the arm with the highest sampled value. After observing the reward, it updates the posterior using Bayes' Theorem.
+
+    It balances exploration and exploitation naturally via the variance of the posterior distributions: arms with high uncertainty (wide variance) are more likely to generate high samples and get explored, while arms with high known rewards (high mean) are likely to be exploited.
+  rubric:
+    - Identifies it as a Bayesian approach maintaining a posterior distribution for each arm
+    - Explains that it samples a value from each posterior and selects the highest
+    - Explains that it balances exploration/exploitation via the variance (uncertainty) of the posterior distributions
+  provenance:
+    status: unverified
+    source: "vault note: 02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md."
+    vault_ref: "02_Computer_Science_Fundamentals/Algorithms/VI. Optimisation and Dynamic Programing/Multi-Armed Bandit.md"
+  tags: [mab, thompson-sampling, bayesian]

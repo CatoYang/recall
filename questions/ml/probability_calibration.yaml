@@ -1,0 +1,56 @@
+- id: probability-calibration-ece
+  topic: probability-calibration
+  difficulty: 1
+  prompt: |
+    What does it mean for a classification model to be "well-calibrated", and how does Expected Calibration Error (ECE) quantify this?
+  answer: |
+    A model is **well-calibrated** if its predicted probabilities match the empirical frequencies of the outcomes. For example, if a model predicts an 80% probability of an event for a set of instances, the event should actually occur in roughly 80% of those instances.
+
+    **Expected Calibration Error (ECE)** quantifies calibration by computing the weighted average of the absolute difference between the predicted probability and the empirical accuracy across different probability bins.
+  rubric:
+    - States that predicted probabilities must match empirical frequencies
+    - Gives an example (e.g., 80% predicted probability means 80% actual occurrence)
+    - Explains that ECE computes the weighted average of the absolute difference between predicted and empirical accuracy across probability bins
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md"
+  tags: [calibration, ece, reliability]
+
+- id: platt-scaling-vs-isotonic
+  topic: probability-calibration
+  difficulty: 2
+  prompt: |
+    Compare Platt Scaling and Isotonic Regression as post-processing techniques for probability calibration. What are their respective approaches and limitations?
+  answer: |
+    **Platt Scaling** fits a logistic regression model over the raw outputs (logits) of a classifier. It is highly effective for models that produce Gaussian-distributed margins (like SVMs), but it assumes a parametric logistic relationship.
+
+    **Isotonic Regression** is a non-parametric approach that fits a monotonically increasing step function to minimize squared error between predictions and true labels. It is more flexible than Platt scaling because it makes no assumptions about the shape of the calibration curve, but it is more prone to overfitting on small datasets.
+  rubric:
+    - States that Platt Scaling fits a logistic regression model over raw outputs
+    - States that Isotonic Regression fits a monotonically increasing step function (non-parametric)
+    - Identifies that Isotonic Regression is more flexible but prone to overfitting on small datasets
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md"
+  tags: [calibration, platt-scaling, isotonic-regression]
+
+- id: temperature-scaling-calibration
+  topic: probability-calibration
+  difficulty: 1
+  prompt: |
+    How does Temperature Scaling calibrate the output probabilities in deep learning models, and what effect does it have on the model's accuracy?
+  answer: |
+    **Temperature Scaling** calibrates output probabilities by dividing the raw logits by a single scalar parameter (the "temperature") before applying the softmax function. 
+
+    Because the relative order (ranking) of the logits remains unchanged after division by a positive scalar, the argmax prediction is identical. Therefore, Temperature Scaling calibrates confidence **without altering the model's accuracy**.
+  rubric:
+    - Explains that logits are divided by a scalar parameter (temperature) before softmax
+    - States that it calibrates output confidence without altering relative rankings
+    - Concludes that it does not alter the model's accuracy
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Probability_Calibration_and_Constraints/06_Probability_Calibration_and_Constraints.md"
+  tags: [calibration, temperature-scaling, deep-learning, softmax]

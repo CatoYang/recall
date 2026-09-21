@@ -1,0 +1,63 @@
+- id: ml-fair-impossibility-theorem
+  topic: fairness-and-bias
+  difficulty: 2
+  prompt: |
+    What is the core consequence of the Impossibility Theorem of Fair Machine Learning regarding group fairness metrics?
+  answer: |
+    The Impossibility Theorem proves that if the base rates (the true prevalence of the positive outcome) differ across demographic groups, many standard group fairness metrics (e.g., Demographic Parity, Equal Opportunity, Predictive Parity) are mathematically incompatible and cannot be satisfied simultaneously.
+  rubric:
+    - "If base rates differ across groups, multiple fairness metrics are mathematically incompatible"
+    - "They cannot all be satisfied simultaneously"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md"
+  tags: [machine-learning, fairness, evaluation]
+
+- id: ml-fair-demographic-parity-vs-equal-opportunity
+  topic: fairness-and-bias
+  difficulty: 2
+  prompt: |
+    How does Demographic (Statistical) Parity differ fundamentally from Equal Opportunity in the context of machine learning fairness?
+  answer: |
+    Demographic Parity requires the overall positive prediction rate to be equal across groups, completely ignoring whether the individuals are actually qualified (the ground truth). Equal Opportunity requires the True Positive Rate (Recall) to be equal, meaning it explicitly considers ground truth to ensure that *actually qualified* individuals have an equal chance of receiving a positive outcome.
+  rubric:
+    - "Demographic Parity requires equal positive prediction rates, ignoring ground truth/qualifications"
+    - "Equal Opportunity requires equal True Positive Rates, accounting for ground truth/actual qualification"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md"
+  tags: [machine-learning, fairness, evaluation]
+
+- id: ml-fair-equalized-odds
+  topic: fairness-and-bias
+  difficulty: 2
+  prompt: |
+    What specific statistical rates must be equal across demographic groups to satisfy the "Equalized Odds" fairness metric?
+  answer: |
+    Equalized Odds requires that both the True Positive Rate (Recall) and the False Positive Rate (Fall-out) be exactly equal across all demographic groups.
+  rubric:
+    - "True Positive Rate (TPR) or Recall must be equal"
+    - "False Positive Rate (FPR) must be equal"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md"
+  tags: [machine-learning, fairness, metrics]
+
+- id: ml-fair-counterfactual-fairness
+  topic: fairness-and-bias
+  difficulty: 1
+  prompt: |
+    What does the concept of "Counterfactual Fairness" require for an individual's prediction?
+  answer: |
+    Counterfactual Fairness requires that an individual's prediction remains identical if their protected attribute (e.g., race, gender) were altered, while holding all other causal factors constant.
+  rubric:
+    - "The prediction must remain identical if the protected attribute is altered"
+    - "All other causal factors are held constant"
+  provenance:
+    status: unverified
+    source: "vault note: 06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md."
+    vault_ref: "06_Model_Evaluation_and_Post_Processing/Fairness_Robustness_and_Drift/04_Fairness_and_Bias.md"
+  tags: [machine-learning, fairness, evaluation]
